@@ -46,7 +46,11 @@ body{
     
     margin: 0em auto 1em auto;
 }
+#descBar{
 
+    height: 120px;
+    width: 50%;
+}
 .generatorContainer textarea{
 
     width: 80%;
