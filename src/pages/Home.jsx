@@ -8,15 +8,24 @@ function Home({ articleModules }) {
     // Process the article modules to extract metadata
     const processedArticles = Object.entries(articleModules).map(([path, module]) => {
       const articleName = path.split("/").pop().replace(".jsx", "");
+      
+      // regex to extract the number prefix from the article name
+      const numberMatch = articleName.match(/^(\d+)-/);
+      const articleNumber = numberMatch ? parseInt(numberMatch[1], 10) : 0;
+      
       return {
         path,
         articleName,
+        articleNumber,
         metadata: module.metadata || {}
       };
     });
     
-    console.log("Processed articles:", processedArticles);
-    setArticlesData(processedArticles);
+    // sorting articles by number in descending order (highest first)
+    const sortedArticles = processedArticles.sort((a, b) => b.articleNumber - a.articleNumber);
+    
+    console.log("Sorted articles:", sortedArticles);
+    setArticlesData(sortedArticles);
   }, [articleModules]);
 
   function path2Title(aPath) {
@@ -26,25 +35,31 @@ function Home({ articleModules }) {
   }
 
   return (
-    <div>
-      <h1>My Blog</h1>
-      
+    <div className="mainPage">
       {articlesData.length === 0 ? (
         <p>Loading articles...</p>
       ) : (
         <ul>
           {articlesData.map(({ articleName, metadata }) => (
-            <li key={articleName} className="article-item">
-              <Link to={`/article/${articleName}`}>
-                <h2>{metadata.title || path2Title(articleName)}</h2>
-              </Link>
-              {metadata.createdOn && (
-                <p className="date">{new Date(metadata.createdOn).toLocaleDateString()}</p>
-              )}
-              {metadata.description && (
-                <p className="description">{metadata.description}</p>
-              )}
-            </li>
+            <Link
+              to={`/article/${articleName}`}
+              key={articleName}
+              className="article-link"
+            >
+              <div className="articleShowCaseContainer">
+                <li className="article-item">
+                  <div className="titleDateContainer">
+                    <h2>{metadata.title || path2Title(articleName)}</h2>
+                    {metadata.createdOn && (
+                      <p className="date">{new Date(metadata.createdOn).toLocaleDateString()}</p>
+                    )}
+                  </div>
+                  {metadata.description && (
+                    <p className="description">{metadata.description}</p>
+                  )}
+                </li>
+              </div>
+            </Link>
           ))}
         </ul>
       )}
