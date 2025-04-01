@@ -6,28 +6,28 @@ import ArticleGenerator from "./ArticleGenerator";
 
 import './index.css'; 
 
-//existing article names
-const articles = import.meta.glob("./pages/articles/*.jsx");
-
+// import articles with eager loading to get the module content (every article comes as a module)
+const articleModules = import.meta.glob("./pages/articles/*.jsx", { eager: true });
 
 function App() {
+  console.log("Article modules:", articleModules);
+  
   return (
     <>
-       <BlogHeader></BlogHeader>
+      <BlogHeader></BlogHeader>
 
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home articles={Object.keys(articles)} />} />
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home articleModules={articleModules} />} />
 
-        {/* Dynamic article route */}
-        <Route path="/article/:articleName" element={<ArticlePage articles={articles} />} />
+          {/* Dynamic article route */}
+          <Route path="/article/:articleName" element={<ArticlePage articles={articleModules} />} />
 
-        {/* Article Generator */}
-        <Route path="/generate-article" element={<ArticleGenerator />} /> 
-      </Routes>
-    </Router>
+          {/* Article Generator */}
+          <Route path="/generate-article" element={<ArticleGenerator />} /> 
+        </Routes>
+      </Router>
     </>
- 
   );
 }
 

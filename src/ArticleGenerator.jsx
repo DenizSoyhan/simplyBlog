@@ -68,14 +68,17 @@ function ArticleGenerator() {
   
     const finalFileName = title2FileName(title);
     const componentName = titleWithoutSpaces(title);
+    
+    // escape line breaks and quotes in the description otherwise it breaks string literal
+    const escapedDesc = desc.replace(/\n/g, "\\n").replace(/"/g, '\\"');
   
-    //metadata as a named export because it turns out vite is over writing it for optimization
+    //metadata as a named export
     const metadata = `export const metadata = {
-    title: "${title}",
+    title: "${title.replace(/"/g, '\\"')}",
     file: "${finalFileName}.jsx",
-    imgDirectory: "${fileName}",
+    imgDirectory: "${fileName.replace(/"/g, '\\"')}",
     createdOn: "${new Date().toISOString()}",
-    description: "${desc}",
+    description: "${escapedDesc}",
     generatedBy: "ArticleGenerator"
   };\n\n`;
   
@@ -83,7 +86,7 @@ function ArticleGenerator() {
   export default function ${componentName}() {
     return (
       <div className="articleContainer">
-        <h1 className="articleTitle">${title}</h1>
+        <h1 className="articleTitle">${title.replace(/"/g, '\\"')}</h1> //double quotes would break the string literal
         ${previewContent
           .split("\n")
           .map((item) => {
@@ -95,7 +98,7 @@ function ArticleGenerator() {
               const videoUrl = item.slice(8, -1);
               return `<div className="iframeContainer"><iframe src="${videoUrl}" frameBorder="0" allowFullScreen className="articleVideo"></iframe></div>`;
             }
-            return `<p className="articleText">${item}</p>`;
+            return `<p className="articleText">${item.replace(/"/g, '\\"')}</p>`; //double quotes would break the string literal
           })
           .join("\n")}
       </div>
