@@ -1,0 +1,48 @@
+:root {
+    --bg-color: #E4D6A7;
+    --text-color: #0F0905;
+    --primary-color: hsl(9, 76%, 40%);
+    --secondary-color: hsl(9, 76%, 35%);
+    --accent-color: hsl(195, 30%, 49%);
+  }
+  
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+  }
+  
+  .blogHeaderContainer {
+    background-color: hsl(46, 53%, 67%);
+  }
+  
+  #blogName {
+    color: var(--primary-color);
+  }
+  
+  #slogan {
+    color: var(--secondary-color);
+  }
+  
+  .articleShowCaseContainer {
+    background-color: hsl(46, 53%, 60%);
+  }
+  
+  .articleShowCaseContainer:hover {
+    background-color: hsl(46, 53%, 45%);
+  }
+  
+  .titleDateContainer {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+  }
+  
+  .articleContainer h1 {
+    color: var(--accent-color);
+    border-bottom: 3px solid var(--accent-color);
+  }
+  
+  .tooltip-text {
+    background-color: #77A6B6;
+    color: var(--text-color);
+  }
+  

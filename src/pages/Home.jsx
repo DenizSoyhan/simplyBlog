@@ -24,7 +24,6 @@ function Home({ articleModules }) {
     // sorting articles by number in descending order (highest first)
     const sortedArticles = processedArticles.sort((a, b) => b.articleNumber - a.articleNumber);
     
-    console.log("Sorted articles:", sortedArticles);
     setArticlesData(sortedArticles);
   }, [articleModules]);
 

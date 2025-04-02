@@ -5,6 +5,7 @@ import BlogHeader from "./BlogHeader";
 import ArticleGenerator from "./ArticleGenerator";
 
 import './index.css'; 
+import Customize from "./Customize";
 
 // import articles with eager loading to get the module content (every article comes as a module)
 const articleModules = import.meta.glob("./pages/articles/*.jsx", { eager: true });
@@ -25,6 +26,9 @@ function App() {
 
           {/* Article Generator */}
           <Route path="/generate-article" element={<ArticleGenerator />} /> 
+
+          {/*Customizer*/}
+          <Route path="/customize" element={<Customize></Customize>} /> 
         </Routes>
       </Router>
     </>
