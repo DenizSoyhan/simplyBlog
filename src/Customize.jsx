@@ -136,7 +136,7 @@ function Customize() {
   };
 
   return (
-    <div>
+    <div className="customizeContainer">
       <h1>Customize Theme</h1>
       <div className="optionCollection">
         <div className="optionContainer">
@@ -147,7 +147,11 @@ function Customize() {
           <label>Text color</label>
           <input type="color" value={textColor} onChange={handleTextColor} />
         </div>
-        <div className="optionContainer">
+       
+      </div>
+     
+     <div className="optionCollection">
+     <div className="optionContainer">
           <label>Blog Page Title Color</label>
           <input type="color" value={titlePrimaryColor} onChange={handleTitlePrimaryColor} />
         </div>
@@ -159,31 +163,37 @@ function Customize() {
           <label>Blog Header Background Color</label>
           <input type="color" value={blogHeaderBgColor} onChange={handleBlogHeaderBgColor} />
         </div>
-      </div>
-     
+     </div>
 
     <label className="customizeLabeler">Your Homepage</label>
     <div className="homeContainer">
       <Home articleModules={articleModules} />
     </div>
 
+      <div className="optionCollection">
+        <div className="optionContainer">
+          <label>Article Title Color</label>
+          <input type="color" value={articleTitleColor} onChange={handleArticleTitleColor} />
+        </div>
+        <div className="optionContainer">
+          <label>Article Box Background</label>
+          <input type="color" value={articleSCBgColor} onChange={handleArticleSCBgColor} />
+        </div>
 
-      <div className="optionContainer">
-        <label>Article Title Color</label>
-        <input type="color" value={articleTitleColor} onChange={handleArticleTitleColor} />
+        <div className="optionContainer">
+          <label>Article Container Hover</label>
+          <input type="color" value={articleSCHover} onChange={handleArticleSCHover} />
+        </div>
+
+              
+        <div className="optionContainer">
+          <label>Article In Title Color</label>
+          <input type="color" value={articleInTitle} onChange={handleArticleInTitle} />
+        </div>
       </div>
-      <div className="optionContainer">
-        <label>Article Container Background</label>
-        <input type="color" value={articleSCBgColor} onChange={handleArticleSCBgColor} />
-      </div>
-      <div className="optionContainer">
-        <label>Article Container Hover</label>
-        <input type="color" value={articleSCHover} onChange={handleArticleSCHover} />
-      </div>
-      <div className="optionContainer">
-        <label>Article In Title Color</label>
-        <input type="color" value={articleInTitle} onChange={handleArticleInTitle} />
-      </div>
+
+
+     
 
       <label className="customizeLabeler">Individual Pages</label>
       <div className="homeContainer">
