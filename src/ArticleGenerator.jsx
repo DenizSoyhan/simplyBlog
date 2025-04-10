@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import './index.css'; 
 import { meta } from "@eslint/js";
 
@@ -9,6 +9,27 @@ function ArticleGenerator() {
   const [fileName, setFileName] = useState("");
   const [previewContent, setPreviewContent] = useState("");
   const [desc, setDesc] = useState("");
+
+  const [serverStatus, setServerStatus] = useState("unknown");
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    checkServerStatus();
+  }, []);
+
+  async function checkServerStatus() {
+    try {
+      const response = await fetch('http://localhost:3001/api/status');
+      if (response.ok) {
+        setServerStatus("running");
+      } else {
+        setServerStatus("error");
+      }
+    } catch (error) {
+      console.error("Server connection failed:", error);
+      setServerStatus("offline");
+    }
+  }
 
   // Function to handle image selection
   function addImage(event) {
@@ -60,7 +81,7 @@ function ArticleGenerator() {
   }
 
   // generate the JSX file with class names
-  function generateJSXFile() {
+  function generateJSXContent() {
     if (!title) {
       alert("Please enter a 'Title'");
       return;
@@ -105,6 +126,63 @@ function ArticleGenerator() {
     );
   }`;
   
+    return jsxContent;
+  }
+
+  async function saveToArticlesDirectory() {
+    if (!title) {
+      alert("Please enter a 'Title'");
+      return;
+    }
+
+    if (serverStatus !== "running") {
+      console.log("Server is not running. Please start the Express server first.");
+      return;
+    }
+
+    setIsSaving(true);
+    const finalFileName = title2FileName(title);
+    const jsxContent = generateJSXContent();
+    if (!jsxContent) {
+      setIsSaving(false);
+      return;
+    }
+    
+    try {
+      const response = await fetch('http://localhost:3001/api/save-article', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fileName: `${finalFileName}.jsx`,
+          content: jsxContent
+        }),
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        alert('Article saved successfully to articles directory!');
+      } else {
+        throw new Error(result.error || "Unknown error occurred");
+      }
+    } catch (error) {
+      console.error('Error saving article:', error);
+      alert(`Failed to save to articles directory: ${error.message}. Downloading file instead...`);
+      // fall back to the download method if everything fails
+      generateJSXFile();
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
+  function generateJSXFile() {
+    const jsxContent = generateJSXContent();
+    if (!jsxContent) return;
+    
+    const finalFileName = title2FileName(title);
+    
     const blob = new Blob([jsxContent], { type: "text/javascript" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
@@ -157,6 +235,24 @@ function ArticleGenerator() {
 
         <button onClick={saveContent}>SAVE</button>
         <button onClick={generateJSXFile}>Generate JSX File</button>
+
+          <button 
+          onClick={saveToArticlesDirectory} 
+          disabled={isSaving || serverStatus !== "running"}
+          className={`saveButton ${serverStatus !== "running" ? "disabled" : ""}`}
+        >
+          {isSaving ? "Saving..." : "Save to Articles Directory"}
+        </button>
+      </div>
+      
+      <div className="serverStatus">
+        Server Status: 
+        <span className={`status-indicator ${serverStatus}`}>
+          {serverStatus === "running" ? "Connected" : 
+           serverStatus === "offline" ? "Offline" : 
+           serverStatus === "error" ? "Error" : "Unknown"}
+        </span>
+        <button onClick={checkServerStatus} className="refreshButton">Refresh</button>
 
       </div>
       
