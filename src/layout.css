@@ -33,7 +33,10 @@
   .articleShowCaseContainer {
     padding: 1em;
     margin: 1em;
+
     min-height: 80px;
+    max-width: 750px;
+
     border: none;
     border-radius: 10px;
     box-shadow: 4px 10px 7px rgba(0, 0, 0, 0.208);
@@ -157,7 +160,6 @@
     margin: 0em auto 0.5em auto;
     font-size: 2.25rem;
     text-align: center;
-    border-bottom: 3px solid var(--accent-color);
   }
   
   .articleContainer p {
@@ -188,3 +190,18 @@
     box-shadow: 3px 10px 7px rgba(0, 0, 0, 0.308);
   }
   
+  /*CUSTOMIZERS*/
+  .homeContainer{
+    border-top: 2px solid var(--article-in-title-color);
+    
+  }
+  .customizeLabeler{
+    display: inline-block;
+    color: var(--text-color);
+
+    width: 100%;
+    text-align: center;
+
+    font-size: 2rem;
+    font-weight: bold;
+  }

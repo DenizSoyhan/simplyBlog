@@ -11,7 +11,7 @@ import Customize from "./Customize";
 const articleModules = import.meta.glob("./pages/articles/*.jsx", { eager: true });
 
 function App() {
-  console.log("Article modules:", articleModules);
+
   
   return (
     <>

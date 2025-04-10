@@ -86,7 +86,7 @@ function ArticleGenerator() {
   export default function ${componentName}() {
     return (
       <div className="articleContainer">
-        <h1 className="articleTitle">${title.replace(/"/g, '\\"')}</h1> //double quotes would break the string literal
+        <h1 className="articleTitle">${title.replace(/"/g, '\\"')/*double quotes would break the string literal*/}</h1>
         ${previewContent
           .split("\n")
           .map((item) => {
@@ -150,7 +150,7 @@ function ArticleGenerator() {
       <div className="buttonContainer">
         <div className="tooltip-container">
             <button onClick={() => document.getElementById("fileInput").click()} className="tooltip-button">Add Image</button>
-            <span className="tooltip-text">Add the image to <br></br><span style={{color:'#9B2915'}}>"./public/articleImages/{fileName ? fileName : 'name-of-file'}"</span></span>
+            <span className="tooltip-text">Add the image to <br></br><span className="dynamicToolTipText">"./public/articleImages/{fileName ? fileName : 'name-of-file'}"</span></span>
         </div>
 
         <button onClick={addVideo}>Add YouTube Video</button>
