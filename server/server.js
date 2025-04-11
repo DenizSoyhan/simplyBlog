@@ -85,6 +85,53 @@ app.post('/api/save-theme', (req, res) => {
   }
 });
 
+// API endpoint to save blog configuration file
+app.post('/api/save-blog-config', (req, res) => {
+  const { configContent } = req.body;
+  
+  if (!configContent) {
+    return res.status(400).json({ error: 'Configuration content is required' });
+  }
+  
+  try {
+    // Path to the BlogConfig.jsx file
+    const configPath = path.join(projectRoot, 'src', 'BlogConfig.jsx');
+    
+    // Create a backup directory if it doesn't exist
+    const backupDir = path.join(projectRoot, 'src', 'configBackups');
+    if (!fs.existsSync(backupDir)) {
+      fs.mkdirSync(backupDir, { recursive: true });
+    }
+    
+    // Create a backup of the current config if it exists
+    if (fs.existsSync(configPath)) {
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+      const backupFileName = `BlogConfig-backup-${timestamp}.jsx`;
+      const backupPath = path.join(backupDir, backupFileName);
+      
+      // Read and save the current config
+      const currentConfig = fs.readFileSync(configPath, 'utf8');
+      fs.writeFileSync(backupPath, currentConfig);
+      console.log(`Current blog config backed up to ${backupPath}`);
+    }
+    
+    // Write the new configuration
+    fs.writeFileSync(configPath, configContent);
+    console.log(`Blog configuration saved to ${configPath}`);
+    
+    res.json({
+      success: true,
+      message: `Blog configuration saved successfully to ${configPath}`
+    });
+  } catch (err) {
+    console.error('Error saving blog config:', err);
+    res.status(500).json({
+      error: 'Failed to save blog configuration',
+      details: err.message
+    });
+  }
+});
+
 // Status endpoint for checking if server is running
 app.get('/api/status', (req, res) => {
   res.json({ status: 'Server is running', timestamp: new Date() });
@@ -109,18 +156,21 @@ app.post('/api/create-image-directory', (req, res) => {
   }
 });
 
+
+
 // Start server
 app.listen(PORT, () => {
   console.log(`
  ┌────────────────────────────────────────────────┐
  │                                                │
  │ Article Generator Server                       │
- │ Running on port ${PORT}                        │
+ │ Running on port ${PORT}                           │
  │                                                │
  │ API Endpoints:                                 │
  │ - POST /api/save-article                       │
  │ - POST /api/save-theme                         │
  │ - POST /api/create-image-directory             │
+ │ - POST /api/save-blog-config                   │
  │ - GET /api/status                              │
  │                                                │
  └────────────────────────────────────────────────┘

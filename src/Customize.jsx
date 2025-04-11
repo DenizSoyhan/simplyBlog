@@ -1,10 +1,16 @@
 import { useState, useEffect } from "react";
 import Home from "./pages/Home";
 import Deniz_İçin_makale from "../defaultAssets/defaultArticles/22-Deniz_İçin_makale";
+import BlogHeader from "./BlogHeader";
+import BlogConfig from "./BlogConfig";
 
 const articleModules = import.meta.glob("../defaultAssets/defaultArticles/*.jsx", { eager: true });
 
 function Customize() {
+
+  const [name, setName] = useState("");
+  const [slogan, setSlogan] = useState("");
+
   // Setting default values for hooks
   const [bgMainColor, setBgMainColor] = useState("#ffffff");
   const [textColor, setTextColor] = useState("#000000");
@@ -19,6 +25,8 @@ function Customize() {
   const [saveStatus, setSaveStatus] = useState("");
 
   useEffect(() => {
+    
+
     // Helper function to convert any CSS color format to hex
     // This is here only for me and 2 other people that uses hsl values while styling
     const convertToHex = (colorValue) => {
@@ -56,7 +64,29 @@ function Customize() {
     setArticleSCBgColor(convertToHex(rootStyles.getPropertyValue("--articleShowCaseContainer-bg-color").trim() || "#ffffff"));
     setArticleSCHover(convertToHex(rootStyles.getPropertyValue("--articleShowCaseContainer-hover-color").trim() || "#cccccc"));
     setArticleInTitle(convertToHex(rootStyles.getPropertyValue("--article-in-title-color").trim() || "#000000"));
+  
+    const blogNameEl = document.getElementById("blogName");
+    const blogSloganEl = document.getElementById("slogan");
+
+    if (blogNameEl) {
+      const contentName = blogNameEl.textContent;
+      const contentSlogan = blogSloganEl.textContent;
+      setName(contentName);
+      setSlogan(contentSlogan);    }
   }, []);
+
+
+  function handleBlogNameChange(e){
+    const newName = e.target.value;
+    setName(newName);
+    document.getElementById("blogName").textContent=newName;
+  }
+
+  function handleSloganChange(e){
+    const newName = e.target.value;
+    setSlogan(newName);
+    document.getElementById("slogan").textContent=newName;
+  }
   
   function handleBgMainColor(e) {
     const newColor = e.target.value;
@@ -112,6 +142,57 @@ function Customize() {
     document.documentElement.style.setProperty("--article-in-title-color", newColor);
   }
 
+  const generateBlogConfig = () =>{
+    return `export const BlogConfig = {
+    blogName: "${name}",
+    slogan: "${slogan}"
+  };
+  
+  export default BlogConfig;`
+
+  };
+
+
+  const downloadConfig = () => {
+    const configContent = generateBlogConfig();
+    const blob = new Blob([configContent], { type: "text/javascript" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "BlogConfig.jsx";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const saveConfigToServer = async () => {
+    try {
+      setSaveStatus("Saving config...");
+      const configContent = generateBlogConfig();
+      
+      // Changed the endpoint to /api/save-blog-config instead of /api/save-theme
+      const response = await fetch('http://localhost:3001/api/save-blog-config', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ configContent }),
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        setSaveStatus("Blog configuration saved successfully!");
+        // Clear the success message after 3 seconds
+        setTimeout(() => setSaveStatus(""), 3000);
+      } else {
+        setSaveStatus(`Error: ${data.error}`);
+      }
+    } catch (error) {
+      console.error('Error saving blog config:', error);
+      setSaveStatus(`Error: ${error.message}`);
+    }
+  };
+
   const generateCSS = () => {
     return `:root {
     --main-bg-color: ${bgMainColor};
@@ -136,6 +217,7 @@ function Customize() {
     link.click();
     document.body.removeChild(link);
   };
+
 
   const saveThemeToServer = async () => {
     try {
@@ -167,11 +249,42 @@ function Customize() {
 
   return (
     <div className="customizeContainer">
+      <br />
+        <div className="optionCollection">
+          
+          <div className="optionContainer">
+
+            <label>Choose a Name For Your Blog</label>
+            <input
+              type="text"
+              placeholder={name}
+              value={name}
+              onChange={(e) => handleBlogNameChange(e)}/>
+
+          </div>
+          
+          <div className="optionContainer">
+            
+            <label>Choose a Name For Your Blog</label>
+            <input
+              type="text"
+              placeholder={slogan}
+              value={slogan}
+              onChange={(e) => handleSloganChange(e)}/>
+
+          </div>
+
+        </div>
+        <div className="buttonContainer">
+           <button onClick={downloadConfig}>Download Config</button>
+           <button onClick={saveConfigToServer}>Save the Changes</button>
+        </div>
+
       <h1>Customize Theme</h1>
       <div className="optionCollection">
         <div className="optionContainer">
           <label>Background Color</label>
-          <input type="color" value={bgMainColor} onChange={handleBgMainColor} />
+          <input type="color" value={bgMainColor} onChange={handleBgMainColor}/>
         </div>
         <div className="optionContainer">
           <label>Text color</label>

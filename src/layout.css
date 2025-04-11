@@ -3,6 +3,12 @@
     margin: 0;
     padding: 0;
   }
+   /*.app is only here to make footer work*/
+  .app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
   
   /* Blog Header */
   .blogHeaderContainer {
@@ -383,3 +389,43 @@
     opacity: 0.6;
     cursor: not-allowed;
   }
+
+  /*FOOTER*/
+  .footerContainer{
+    background-color: var(--blog-header-bg);
+    margin-top: auto; /*sticks footer to the bottom*/
+    padding:1em;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+  }
+
+  .footerContainer h3{
+    font-size: 1.5rem;
+    
+    color: var(--article-title-color);
+  }
+  .seperator{
+    width: 400px;
+    height: 2px;
+
+
+    background-color: var(--article-title-color);
+
+  }
+
+  .footerContainer a{
+
+    text-decoration: none;
+    color: inherit;
+  }
+
+.icon{
+  margin: 0.5em;
+  font-size: 2rem;
+
+  color: var(--article-title-color);
+}
