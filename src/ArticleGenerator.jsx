@@ -6,7 +6,6 @@ import { meta } from "@eslint/js";
 function ArticleGenerator() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [fileName, setFileName] = useState("");
   const [previewContent, setPreviewContent] = useState("");
   const [desc, setDesc] = useState("");
 
@@ -31,9 +30,44 @@ function ArticleGenerator() {
     }
   }
 
+  async function createImageDirectory() {
+    if (!title) {
+      alert("Please enter a title first for the articles so we can create a directory for your images");
+      return;
+    }
+  
+    if (serverStatus !== "running") {
+      alert("Server is not running. Please start the Express server first.");
+      return;
+    }
+  
+    try {
+      const response = await fetch('http://localhost:3001/api/create-image-directory', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          directoryName: title
+        }),
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        alert(`Image directory created: ./public/articleImages/${title}`);
+      } else {
+        throw new Error(result.error || "Unknown error occurred");
+      }
+    } catch (error) {
+      console.error('Error creating image directory:', error);
+      alert(`Failed to create image directory: ${error.message}`);
+    }
+  }
+
   // Function to handle image selection
   function addImage(event) {
-    if (!fileName) {
+    if (!title) {
       alert("Please enter a file name first.");
       return;
     }
@@ -41,7 +75,7 @@ function ArticleGenerator() {
     const file = event.target.files[0];
     if (file) {
       const imageName = file.name;
-      setContent((prevContent) => prevContent + `\n[Image: /articleImages/${fileName}/${imageName}]`);
+      setContent((prevContent) => prevContent + `\n[Image: /articleImages/${title}/${imageName}]`);
     }
   }
 
@@ -97,7 +131,7 @@ function ArticleGenerator() {
     const metadata = `export const metadata = {
     title: "${title.replace(/"/g, '\\"')}",
     file: "${finalFileName}.jsx",
-    imgDirectory: "${fileName.replace(/"/g, '\\"')}",
+    imgDirectory: "${title.replace(/"/g, '\\"')}",
     createdOn: "${new Date().toISOString()}",
     description: "${escapedDesc}",
     generatedBy: "ArticleGenerator"
@@ -194,15 +228,22 @@ function ArticleGenerator() {
   
 
   return (
+    
     <div className="generatorContainer">
+            <div className="serverStatus">
+        Server Status: 
+        <span className={`status-indicator ${serverStatus}`}>
+          {serverStatus === "running" ? "Connected" : 
+           serverStatus === "offline" ? "Offline" : 
+           serverStatus === "error" ? "Error" : "Unknown"}
+        </span>
+        <button onClick={checkServerStatus} className="refreshButton">Refresh</button>
+
+      </div>
+
       <h1>Article Generator ⚙️</h1>
-      <input
-        type="text"
-        placeholder="File Name for Images (e.g., Article1-images)"
-        value={fileName}
-        onChange={(e) => setFileName(e.target.value)}
-      />
       
+
       <input
         type="text"
         placeholder="Article Title"
@@ -217,8 +258,14 @@ function ArticleGenerator() {
         id="descBar"
       />
 
+<div className="directoryButtonContainer">
+      <h3>Put your images to ./public/articleImages/{title ? title : 'name-of-file'}</h3>
+      <p>You can click the button below to create the said directory!<br></br>Do not change the article title after creating directory</p>
+      <button onClick={createImageDirectory}>Create Image Directory</button>
+      </div>
+
       <textarea
-        placeholder="Write your paragraph..."
+        placeholder="Write your article content here..."
         value={content}
         onChange={(e) => setContent(e.target.value)}
       />
@@ -227,35 +274,28 @@ function ArticleGenerator() {
    
       <div className="buttonContainer">
         <div className="tooltip-container">
-            <button onClick={() => document.getElementById("fileInput").click()} className="tooltip-button">Add Image</button>
-            <span className="tooltip-text">Add the image to <br></br><span className="dynamicToolTipText">"./public/articleImages/{fileName ? fileName : 'name-of-file'}"</span></span>
+          <button onClick={() => document.getElementById("fileInput").click()} className="tooltip-button">Add Image</button>
+          <span className="tooltip-text">Images will be stored in <br></br><span className="dynamicToolTipText">"./public/articleImages/{title ? title : 'name-of-file'}"</span></span>
         </div>
 
         <button onClick={addVideo}>Add YouTube Video</button>
 
+      </div>
+
+      <div className="buttonContainer">
         <button onClick={saveContent}>SAVE</button>
+      </div>
+      
+      <div className="buttonContainer">
         <button onClick={generateJSXFile}>Generate JSX File</button>
-
-          <button 
-          onClick={saveToArticlesDirectory} 
-          disabled={isSaving || serverStatus !== "running"}
-          className={`saveButton ${serverStatus !== "running" ? "disabled" : ""}`}
-        >
-          {isSaving ? "Saving..." : "Save to Articles Directory"}
-        </button>
+            <button 
+              onClick={saveToArticlesDirectory} 
+              disabled={isSaving || serverStatus !== "running"}
+              className={`saveButton ${serverStatus !== "running" ? "disabled" : ""}`}
+              >
+              {isSaving ? "Saving..." : "Save to Articles Directory"}
+            </button>
       </div>
-      
-      <div className="serverStatus">
-        Server Status: 
-        <span className={`status-indicator ${serverStatus}`}>
-          {serverStatus === "running" ? "Connected" : 
-           serverStatus === "offline" ? "Offline" : 
-           serverStatus === "error" ? "Error" : "Unknown"}
-        </span>
-        <button onClick={checkServerStatus} className="refreshButton">Refresh</button>
-
-      </div>
-      
 
       {/* Preview Box */}
       <h1 className="previewTitle">PREVIEW</h1>

@@ -47,6 +47,28 @@ app.get('/api/status', (req, res) => {
   res.json({ status: 'Server is running', timestamp: new Date() });
 });
 
+// API endpoint to create image directory
+app.post('/api/create-image-directory', (req, res) => {
+  const { directoryName } = req.body;
+  
+  if (!directoryName) {
+    return res.status(400).json({ error: 'Directory name is required' });
+  }
+  
+  // Path to the images directory
+  const imagesDir = path.join(projectRoot, 'public', 'articleImages', directoryName);
+  
+  // Create the directory if it doesn't exist
+  try {
+    fs.mkdirSync(imagesDir, { recursive: true });
+    console.log(`Image directory created at ${imagesDir}`);
+    res.json({ success: true, message: `Image directory created at ${imagesDir}` });
+  } catch (err) {
+    console.error('Error creating directory:', err);
+    return res.status(500).json({ error: 'Failed to create image directory', details: err.message });
+  }
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`
@@ -57,6 +79,7 @@ app.listen(PORT, () => {
     │                                                │
     │   API Endpoints:                               │
     │   - POST /api/save-article                     │
+    │   - POST /api/create-image-directory           │
     │   - GET  /api/status                           │
     │                                                │
     └────────────────────────────────────────────────┘
