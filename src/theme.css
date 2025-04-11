@@ -1,15 +1,11 @@
 :root {
     --main-bg-color: #E4D6A7;
-
-    --text-color: #0F0905;
-    --title-primary-color: hsl(9, 76%, 40%);
-    --title-secondary-color: hsl(9, 76%, 35%);
-    --blog-header-bg:hsl(46, 53%, 67%);
-
-    --article-title-color:hsl(9, 76%, 40%);
-    --articleShowCaseContainer-bg-color: hsl(46, 53%, 60%);
-    --articleShowCaseContainer-hover-color: hsl(46, 53%, 45%);
-
-    --article-in-title-color: hsl(195, 30%, 49%);
-  
+    --text-color: #000000;
+    --title-primary-color: #b43018;
+    --title-secondary-color: #ed333b;
+    --blog-header-bg: #d7c37e;
+    --article-title-color: #b43018;
+    --articleShowCaseContainer-bg-color: #cfb663;
+    --articleShowCaseContainer-hover-color: #b09336;
+    --article-in-title-color: #5790a2;
   }

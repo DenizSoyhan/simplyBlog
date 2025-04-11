@@ -15,10 +15,12 @@ function Customize() {
   const [articleSCBgColor, setArticleSCBgColor] = useState("#ffffff");
   const [articleSCHover, setArticleSCHover] = useState("#cccccc");
   const [articleInTitle, setArticleInTitle] = useState("#000000");
+  
+  const [saveStatus, setSaveStatus] = useState("");
 
   useEffect(() => {
     // Helper function to convert any CSS color format to hex
-   // This is here only for me and 2 other people that uses hsl values while styling
+    // This is here only for me and 2 other people that uses hsl values while styling
     const convertToHex = (colorValue) => {
       // If it's already a hex value, return it
       if (colorValue.startsWith("#")) return colorValue;
@@ -135,6 +137,34 @@ function Customize() {
     document.body.removeChild(link);
   };
 
+  const saveThemeToServer = async () => {
+    try {
+      setSaveStatus("Saving theme...");
+      const cssContent = generateCSS();
+      
+      const response = await fetch('http://localhost:3001/api/save-theme', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ cssContent }),
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        setSaveStatus("Theme saved successfully!");
+        // Clear the success message after 3 seconds
+        setTimeout(() => setSaveStatus(""), 3000);
+      } else {
+        setSaveStatus(`Error: ${data.error}`);
+      }
+    } catch (error) {
+      console.error('Error saving theme:', error);
+      setSaveStatus(`Error: ${error.message}`);
+    }
+  };
+
   return (
     <div className="customizeContainer">
       <h1>Customize Theme</h1>
@@ -169,7 +199,6 @@ function Customize() {
     <div className="homeContainer">
       <Home articleModules={articleModules} />
     </div>
-
       <div className="optionCollection">
         <div className="optionContainer">
           <label>Article Title Color</label>
@@ -192,19 +221,18 @@ function Customize() {
         </div>
       </div>
 
-
-     
-
       <label className="customizeLabeler">Individual Pages</label>
       <div className="homeContainer">
         <Deniz_İçin_makale></Deniz_İçin_makale> {/*TODO: DEFINE A DEFAULT ARTICLE FOR THIS*/} 
       </div>
      
-
-
-      <button onClick={downloadCSS}>Download CSS</button>
+      <div className="buttonContainer">
+        <button onClick={downloadCSS}>Download CSS</button>
+        <button onClick={saveThemeToServer}>Save Theme to Server</button>
+        
+      </div>
       <br />
-
+    <div>{saveStatus && <p className="saveStatus">{saveStatus}</p>}</div>
     </div>
   );
 }
