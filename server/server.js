@@ -132,6 +132,54 @@ app.post('/api/save-blog-config', (req, res) => {
   }
 });
 
+
+// API endpoint to save footer config file
+app.post('/api/save-footer-config', (req, res) => {
+  const { footerContent } = req.body;
+  
+  if (!footerContent) {
+    return res.status(400).json({ error: 'Footer configuration content is required' });
+  }
+  
+  try {
+    // Path to the FooterConfig.jsx file
+    const configPath = path.join(projectRoot, 'src', 'FooterConfig.jsx');
+    
+    // Create a backup directory if it doesn't exist
+    const backupDir = path.join(projectRoot, 'src', 'footerConfigBackups');
+    if (!fs.existsSync(backupDir)) {
+      fs.mkdirSync(backupDir, { recursive: true });
+    }
+    
+    // Create a backup of the current footer config if it exists
+    if (fs.existsSync(configPath)) {
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+      const backupFileName = `FooterConfig-backup-${timestamp}.jsx`;
+      const backupPath = path.join(backupDir, backupFileName);
+      
+      // Read and save the current config
+      const currentConfig = fs.readFileSync(configPath, 'utf8');
+      fs.writeFileSync(backupPath, currentConfig);
+      console.log(`Current footer config backed up to ${backupPath}`);
+    }
+    
+    // Write the new configuration
+    fs.writeFileSync(configPath, footerContent);
+    console.log(`Footer configuration saved to ${configPath}`);
+    
+    res.json({
+      success: true,
+      message: `Footer configuration saved successfully to ${configPath}`
+    });
+  } catch (err) {
+    console.error('Error saving footer config:', err);
+    res.status(500).json({
+      error: 'Failed to save footer configuration',
+      details: err.message
+    });
+  }
+});
+
 // Status endpoint for checking if server is running
 app.get('/api/status', (req, res) => {
   res.json({ status: 'Server is running', timestamp: new Date() });
@@ -170,6 +218,7 @@ app.listen(PORT, () => {
  │ - POST /api/save-article                       │
  │ - POST /api/save-theme                         │
  │ - POST /api/create-image-directory             │
+ │ - POST /api/save-footer-config                 │
  │ - POST /api/save-blog-config                   │
  │ - GET /api/status                              │
  │                                                │

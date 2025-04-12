@@ -3,15 +3,18 @@ import Home from "./pages/Home";
 import Deniz_İçin_makale from "../defaultAssets/defaultArticles/22-Deniz_İçin_makale";
 import BlogHeader from "./BlogHeader";
 import BlogConfig from "./BlogConfig";
+import BlogFooterConfig from "./FooterConfig";
 
 const articleModules = import.meta.glob("../defaultAssets/defaultArticles/*.jsx", { eager: true });
 
 function Customize() {
+  /* Setting default values for hooks*/
 
+  //Blog name and slogan
   const [name, setName] = useState("");
   const [slogan, setSlogan] = useState("");
 
-  // Setting default values for hooks
+  //Colors
   const [bgMainColor, setBgMainColor] = useState("#ffffff");
   const [textColor, setTextColor] = useState("#000000");
   const [titlePrimaryColor, setTitlePrimaryColor] = useState("#000000");
@@ -22,7 +25,21 @@ function Customize() {
   const [articleSCHover, setArticleSCHover] = useState("#cccccc");
   const [articleInTitle, setArticleInTitle] = useState("#000000");
   
+  //Status for theme change
   const [saveStatus, setSaveStatus] = useState("");
+
+  //Footer information
+
+  const [creatorName, setCreatorName] = useState("");
+  const [creatorContact, setCreatorContact] = useState("");
+  const [instaV, setInsta] = useState("");
+  const [githubV, setGithubV] = useState("");
+  const [twitterV, setTwitterV] = useState("");
+  const [linkedinV, setLinkedinV] = useState("");
+  const [facebookV, setFacebookV] = useState("");
+  const [pWebsiteV, setpWebsiteV] = useState("");
+  const [youtubeV, setYoutube] = useState("");
+
 
   useEffect(() => {
     
@@ -73,9 +90,32 @@ function Customize() {
       const contentSlogan = blogSloganEl.textContent;
       setName(contentName);
       setSlogan(contentSlogan);    }
+
+
+  
+
   }, []);
 
+  useEffect(() => {
+    const loadFooterConfig = async () => {
+      const module = await import("./FooterConfig.jsx");
+      const config = module.default;
+  
+      setCreatorName(config.personName || "");
+      setCreatorContact(config.contact || "");
+      setInsta(config.insta || "");
+      setGithubV(config.github || "");
+      setTwitterV(config.twitter || "");
+      setLinkedinV(config.linkedin || "");
+      setFacebookV(config.facebook || "");
+      setpWebsiteV(config.pWebsite || "");
+      setYoutube(config.youtube || "");
+    };
+  
+    loadFooterConfig();
+  }, []);
 
+  /*Color and name handling*/
   function handleBlogNameChange(e){
     const newName = e.target.value;
     setName(newName);
@@ -141,6 +181,121 @@ function Customize() {
     setArticleInTitle(newColor);
     document.documentElement.style.setProperty("--article-in-title-color", newColor);
   }
+
+  //Footer handling
+
+  function handleCreatorName(e){
+    const newCName = e.target.value;
+    setCreatorName(newCName);
+    document.getElementById("creatorName").textContent = newCName;
+  }
+  
+  function handleCreatorContact(e){
+    const newCContact=e.target.value;
+    setCreatorContact(newCContact);
+    document.getElementById("creatorContact").textContent = newCContact;
+  }
+
+  function handleCreatorInsta(e){
+    const newCInsta=e.target.value;
+
+    if(newCInsta ===""){
+      document.getElementById("instaContainer").classList.add("hide");
+      setInsta(newCInsta);
+    }
+    else{
+      document.getElementById("instaContainer").classList.remove("hide");
+      setInsta(newCInsta);
+      document.getElementById("instaContainer").childNodes[0].href=newCInsta;
+    }
+  }
+
+  function handleCreatorGithub(e){
+    const newCGithub=e.target.value;
+
+    if(newCGithub ===""){
+      document.getElementById("githubContainer").classList.add("hide");
+      setGithubV(newCGithub);
+    }
+    else{
+      document.getElementById("githubContainer").classList.remove("hide");
+      setGithubV(newCGithub);
+      document.getElementById("githubContainer").childNodes[0].href=newCGithub;
+    }
+  }
+
+  function handleCreatorTwitter(e){
+    const newCTwitter=e.target.value;
+
+    if(newCTwitter ===""){
+      document.getElementById("twitterContainer").classList.add("hide");
+      setTwitterV(newCTwitter);
+    }
+    else{
+      document.getElementById("twitterContainer").classList.remove("hide");
+      setTwitterV(newCTwitter);
+      document.getElementById("twitterContainer").childNodes[0].href=newCTwitter;
+    }
+  }
+
+  function handlecreatorLinkedin(e){
+    const newCLinkedin=e.target.value;
+
+    if(newCLinkedin ===""){
+      document.getElementById("linkedinContainer").classList.add("hide");
+      setLinkedinV(newCLinkedin);
+    }
+    else{
+      document.getElementById("linkedinContainer").classList.remove("hide");
+      setLinkedinV(newCLinkedin);
+      document.getElementById("linkedinContainer").childNodes[0].href=newCLinkedin;
+    }
+  }
+  
+  function handleCreatorFacebook(e){
+    const newCFacebook=e.target.value;
+
+    if(newCFacebook ===""){
+      document.getElementById("facebookContainer").classList.add("hide");
+      setFacebookV(newCFacebook);
+    }
+    else{
+      document.getElementById("facebookContainer").classList.remove("hide");
+      setFacebookV(newCFacebook);
+      document.getElementById("facebookContainer").childNodes[0].href=newCFacebook;
+    }
+  }
+
+  function handleCreatorWebsite(e){
+    const newCWebsite=e.target.value;
+
+    if(newCWebsite ===""){
+      document.getElementById("websiteContainer").classList.add("hide");
+      setpWebsiteV(newCWebsite);
+    }
+    else{
+      document.getElementById("websiteContainer").classList.remove("hide");
+      setpWebsiteV(newCWebsite);
+      document.getElementById("websiteContainer").childNodes[0].href=newCWebsite;
+    }
+  }
+
+  function handleCreatorYoutube(e){
+    const newCYoutube=e.target.value;
+
+    if(newCYoutube ===""){
+      document.getElementById("youtubeContainer").classList.add("hide");
+      setYoutube(newCYoutube);
+    }
+    else{
+      document.getElementById("youtubeContainer").classList.remove("hide");
+      setYoutube(newCYoutube);
+      document.getElementById("youtubeContainer").childNodes[0].href=newCYoutube;
+    }
+  }
+
+
+  //generating, downloading, saving stuff
 
   const generateBlogConfig = () =>{
     return `export const BlogConfig = {
@@ -247,6 +402,66 @@ function Customize() {
     }
   };
 
+  const generateFooter = () => {
+    return (`export const BlogFooterConfig = {
+    personName: "${creatorName}",
+    contact: "${creatorContact}",
+    insta: "${instaV}",
+    github: "${githubV}",
+    twitter: "${twitterV}",
+    linkedin:  "${linkedinV}",
+    facebook:  "${facebookV}",
+    pWebsite:  "${pWebsiteV}",
+    youtube:  "${youtubeV}"
+    
+  };
+  
+  export default BlogFooterConfig;`
+    );
+  };
+
+  const downloadFooter = () => {
+    const footerContent = generateFooter();
+    const blob = new Blob([footerContent], { type: "text/javascript" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "FooterConfig.jsx";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const saveFooterToServer = async () => {
+    try {
+      setSaveStatus("Saving footer configuration...");
+      const footerContent = generateFooter();
+      
+      const response = await fetch('http://localhost:3001/api/save-footer-config', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ footerContent }),
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        setSaveStatus("Footer configuration saved successfully!");
+        // Clear the success message after 3 seconds
+        setTimeout(() => setSaveStatus(""), 3000);
+      } else {
+        setSaveStatus(`Error: ${data.error}`);
+      }
+    } catch (error) {
+      console.error('Error saving footer config:', error);
+      setSaveStatus(`Error: ${error.message}`);
+    }
+  };
+
+
+
+
   return (
     <div className="customizeContainer">
       <br />
@@ -346,7 +561,104 @@ function Customize() {
       </div>
       <br />
     <div>{saveStatus && <p className="saveStatus">{saveStatus}</p>}</div>
+    
+      
+    <label className="customizeLabeler">Footer Settings</label>
+    
+    <div className="optionCollection">
+      <div className="optionContainer">
+              
+              <label>Display your name in footer</label>
+              <input
+                type="text"
+                value={creatorName}
+                onChange={(e) => handleCreatorName(e)}/>
+      </div>
+      <div className="optionContainer">
+              
+              <label>Display your Contact email</label>
+              <input
+                type="text"
+                value={creatorContact}
+                onChange={(e) => handleCreatorContact(e)}/>
+      </div>    
+
     </div>
+    
+    <div className="optionCollection">
+      <div className="optionContainer">
+              
+              <label>Display your Instagram</label>
+              <input
+                type="text"
+                value={instaV}
+                onChange={(e) => handleCreatorInsta(e)}/>
+      </div> 
+      <div className="optionContainer">
+              
+              <label>Display your Github</label>
+              <input
+                type="text"
+                value={githubV}
+                onChange={(e) => handleCreatorGithub(e)}/>
+      </div> 
+      <div className="optionContainer">
+              
+              <label>Display your Twitter</label>
+              <input
+                type="text"
+                value={twitterV}
+                onChange={(e) => handleCreatorTwitter(e)}/>
+      </div> 
+    </div>
+
+    <div className="optionCollection">
+      <div className="optionContainer">
+              
+              <label>Display your LinkedIn</label>
+              <input
+                type="text"
+                value={linkedinV}
+                onChange={(e) => handlecreatorLinkedin(e)}/>
+      </div> 
+      <div className="optionContainer">
+              
+              <label>Display your Facebook</label>
+              <input
+                type="text"
+                value={facebookV}
+                onChange={(e) => handleCreatorFacebook(e)}/>
+      </div> 
+      <div className="optionContainer">
+              
+              <label>Display your website</label>
+              <input
+                type="text"
+                value={pWebsiteV}
+                onChange={(e) => handleCreatorWebsite(e)}/>
+      </div> 
+    </div>
+    <div className="optionCollection">
+      <div className="optionContainer">
+                
+              <label>Display your Youtube Channel</label>
+              <input
+                type="text"
+                value={youtubeV}
+                onChange={(e) => handleCreatorYoutube(e)}/>
+      </div> 
+    </div>
+
+    <div className="buttonContainer">
+      <button onClick={downloadFooter}>Download Footer</button>
+      <button onClick={saveFooterToServer}>Save the Footer</button>
+    </div>
+
+
+
+
+    </div>
+    
   );
 }
 
