@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
 import './index.css'; 
-import { meta } from "@eslint/js";
-
 
 function ArticleGenerator() {
   const [title, setTitle] = useState("");
@@ -11,6 +9,8 @@ function ArticleGenerator() {
 
   const [serverStatus, setServerStatus] = useState("unknown");
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   useEffect(() => {
     checkServerStatus();
@@ -65,17 +65,74 @@ function ArticleGenerator() {
     }
   }
 
-  // Function to handle image selection
-  function addImage(event) {
+  // New function to handle image uploads
+  async function uploadImage(file) {
     if (!title) {
-      alert("Please enter a file name first.");
+      alert("Please enter a title first.");
+      return null;
+    }
+
+    if (serverStatus !== "running") {
+      alert("Server is not running. Please start the Express server first.");
+      return null;
+    }
+
+    setIsUploading(true);
+    setUploadProgress(0);
+    
+    // Create a FormData object to send the file
+    const formData = new FormData();
+    formData.append('image', file);
+    
+    try {
+      // Create image directory first if it doesn't exist
+      await fetch('http://localhost:3001/api/create-image-directory', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ directoryName: title }),
+      });
+
+      // Now upload the image
+      const response = await fetch(`http://localhost:3001/api/upload-image/${title}`, {
+        method: 'POST',
+        body: formData,
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        setUploadProgress(100);
+        setTimeout(() => {
+          setIsUploading(false);
+          setUploadProgress(0);
+        }, 1000);
+        return result.imagePath;
+      } else {
+        throw new Error(result.error || "Unknown error occurred");
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      alert(`Failed to upload image: ${error.message}`);
+      setIsUploading(false);
+      return null;
+    }
+  }
+
+  // Function to handle image selection and upload
+  async function addImage(event) {
+    if (!title) {
+      alert("Please enter a title first.");
       return;
     }
 
     const file = event.target.files[0];
     if (file) {
-      const imageName = file.name;
-      setContent((prevContent) => prevContent + `\n[Image: /articleImages/${title}/${imageName}]`);
+      // Upload the image and get its path
+      const imagePath = await uploadImage(file);
+      if (imagePath) {
+        // Add the image reference to the content
+        setContent((prevContent) => prevContent + `\n[Image: ${imagePath}]`);
+      }
     }
   }
 
@@ -226,11 +283,26 @@ function ArticleGenerator() {
     document.body.removeChild(link);
   }
   
+  // Render a progress bar for image uploads
+  const renderUploadProgress = () => {
+    if (!isUploading) return null;
+    
+    return (
+      <div className="upload-progress-container">
+        <div 
+          className="upload-progress-bar" 
+          style={{ width: `${uploadProgress}%` }}
+        ></div>
+        <div className="upload-progress-text">
+          {uploadProgress < 100 ? 'Uploading...' : 'Upload complete!'}
+        </div>
+      </div>
+    );
+  };
 
   return (
-    
     <div className="generatorContainer">
-            <div className="serverStatus">
+      <div className="serverStatus">
         Server Status: 
         <span className={`status-indicator ${serverStatus}`}>
           {serverStatus === "running" ? "Connected" : 
@@ -238,12 +310,10 @@ function ArticleGenerator() {
            serverStatus === "error" ? "Error" : "Unknown"}
         </span>
         <button onClick={checkServerStatus} className="refreshButton">Refresh</button>
-
       </div>
 
       <h1>Article Generator ⚙️</h1>
       
-
       <input
         type="text"
         placeholder="Article Title"
@@ -258,10 +328,10 @@ function ArticleGenerator() {
         id="descBar"
       />
 
-<div className="directoryButtonContainer">
-      <h3>Put your images to ./public/articleImages/{title ? title : 'name-of-file'}</h3>
-      <p>You can click the button below to create the said directory!<br></br>Do not change the article title after creating directory</p>
-      <button onClick={createImageDirectory}>Create Image Directory</button>
+      <div className="directoryInfo">
+        <h3>Images will be uploaded to: ./public/articleImages/{title ? title : 'name-of-file'}</h3>
+        <p>The directory will be created automatically when you upload your first image. Try not to change your title as the directory will be named after the article title!</p>
+        {renderUploadProgress()}
       </div>
 
       <textarea
@@ -274,12 +344,17 @@ function ArticleGenerator() {
    
       <div className="buttonContainer">
         <div className="tooltip-container">
-          <button onClick={() => document.getElementById("fileInput").click()} className="tooltip-button">Add Image</button>
-          <span className="tooltip-text">Images will be stored in <br></br><span className="dynamicToolTipText">"./public/articleImages/{title ? title : 'name-of-file'}"</span></span>
+          <button 
+            onClick={() => document.getElementById("fileInput").click()} 
+            className="tooltip-button" 
+            disabled={isUploading}
+          >
+            {isUploading ? "Uploading..." : "Add Image"}
+          </button>
+          <span className="tooltip-text">Images will be uploaded to <br></br><span className="dynamicToolTipText">"./public/articleImages/{title ? title : 'name-of-file'}"</span></span>
         </div>
 
         <button onClick={addVideo}>Add YouTube Video</button>
-
       </div>
 
       <div className="buttonContainer">
@@ -288,13 +363,13 @@ function ArticleGenerator() {
       
       <div className="buttonContainer">
         <button onClick={generateJSXFile}>Generate JSX File</button>
-            <button 
-              onClick={saveToArticlesDirectory} 
-              disabled={isSaving || serverStatus !== "running"}
-              className={`saveButton ${serverStatus !== "running" ? "disabled" : ""}`}
-              >
-              {isSaving ? "Saving..." : "Save to Articles Directory"}
-            </button>
+        <button 
+          onClick={saveToArticlesDirectory} 
+          disabled={isSaving || serverStatus !== "running"}
+          className={`saveButton ${serverStatus !== "running" ? "disabled" : ""}`}
+        >
+          {isSaving ? "Saving..." : "Save to Articles Directory"}
+        </button>
       </div>
 
       {/* Preview Box */}

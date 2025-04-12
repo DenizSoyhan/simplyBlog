@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
+const multer = require('multer');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
@@ -12,6 +13,53 @@ app.use(bodyParser.json({ limit: '50mb' })); // Increased limit for larger files
 
 // Go one back to get the project root directory
 const projectRoot = path.resolve(__dirname, '..');
+
+// Configure multer for file uploads
+const configureStorage = (req, file, cb) => {
+  // Get directory name from the request
+  const directoryName = req.params.directoryName;
+  if (!directoryName) {
+    return cb(new Error('Directory name is required'), false);
+  }
+  
+  // Path to the images directory
+  const imagesDir = path.join(projectRoot, 'public', 'articleImages', directoryName);
+  
+  // Create the directory if it doesn't exist
+  if (!fs.existsSync(imagesDir)) {
+    fs.mkdirSync(imagesDir, { recursive: true });
+  }
+  
+  cb(null, imagesDir);
+};
+
+const storage = multer.diskStorage({
+  destination: configureStorage,
+  filename: (req, file, cb) => {
+    // Keep the original filename
+    cb(null, file.originalname);
+  }
+});
+
+const upload = multer({ storage });
+
+// API endpoint to upload image
+app.post('/api/upload-image/:directoryName', upload.single('image'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'No image file provided' });
+  }
+  
+  const directoryName = req.params.directoryName;
+  const imageName = req.file.filename;
+  const imagePath = `/articleImages/${directoryName}/${imageName}`;
+  
+  console.log(`Image uploaded to ${req.file.path}`);
+  res.json({ 
+    success: true, 
+    message: 'Image uploaded successfully',
+    imagePath: imagePath
+  });
+});
 
 // API endpoint to save article file
 app.post('/api/save-article', (req, res) => {
@@ -132,7 +180,6 @@ app.post('/api/save-blog-config', (req, res) => {
   }
 });
 
-
 // API endpoint to save footer config file
 app.post('/api/save-footer-config', (req, res) => {
   const { footerContent } = req.body;
@@ -185,27 +232,6 @@ app.get('/api/status', (req, res) => {
   res.json({ status: 'Server is running', timestamp: new Date() });
 });
 
-// API endpoint to create image directory
-app.post('/api/create-image-directory', (req, res) => {
-  const { directoryName } = req.body;
-  if (!directoryName) {
-    return res.status(400).json({ error: 'Directory name is required' });
-  }
-  // Path to the images directory
-  const imagesDir = path.join(projectRoot, 'public', 'articleImages', directoryName);
-  // Create the directory if it doesn't exist
-  try {
-    fs.mkdirSync(imagesDir, { recursive: true });
-    console.log(`Image directory created at ${imagesDir}`);
-    res.json({ success: true, message: `Image directory created at ${imagesDir}` });
-  } catch (err) {
-    console.error('Error creating directory:', err);
-    return res.status(500).json({ error: 'Failed to create image directory', details: err.message });
-  }
-});
-
-
-
 // Start server
 app.listen(PORT, () => {
   console.log(`
@@ -217,9 +243,9 @@ app.listen(PORT, () => {
  │ API Endpoints:                                 │
  │ - POST /api/save-article                       │
  │ - POST /api/save-theme                         │
- │ - POST /api/create-image-directory             │
  │ - POST /api/save-footer-config                 │
  │ - POST /api/save-blog-config                   │
+ │ - POST /api/upload-image/:directoryName        │
  │ - GET /api/status                              │
  │                                                │
  └────────────────────────────────────────────────┘
