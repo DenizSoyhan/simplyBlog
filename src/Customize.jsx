@@ -23,7 +23,10 @@ function Customize() {
   const [articleTitleColor, setArticleTitleColor] = useState("#000000");
   const [articleSCBgColor, setArticleSCBgColor] = useState("#ffffff");
   const [articleSCHover, setArticleSCHover] = useState("#cccccc");
+  const [articleSCDesc, setArticleDescColor] = useState("#000000");
   const [articleInTitle, setArticleInTitle] = useState("#000000");
+  const [articleContentTextColor, setArticleContentTextColor] = useState("#ffffff");
+ 
   
   //Status for theme change
   const [saveStatus, setSaveStatus] = useState("");
@@ -80,8 +83,10 @@ function Customize() {
     setArticleTitleColor(convertToHex(rootStyles.getPropertyValue("--article-title-color").trim() || "#000000"));
     setArticleSCBgColor(convertToHex(rootStyles.getPropertyValue("--articleShowCaseContainer-bg-color").trim() || "#ffffff"));
     setArticleSCHover(convertToHex(rootStyles.getPropertyValue("--articleShowCaseContainer-hover-color").trim() || "#cccccc"));
+    setArticleDescColor(convertToHex(rootStyles.getPropertyValue("--article-in-title-color").trim() || "#000000"));
     setArticleInTitle(convertToHex(rootStyles.getPropertyValue("--article-in-title-color").trim() || "#000000"));
-  
+    setArticleContentTextColor(convertToHex(rootStyles.getPropertyValue(" --article-in-content-color").trim() || "#ffffff"))
+
     const blogNameEl = document.getElementById("blogName");
     const blogSloganEl = document.getElementById("slogan");
 
@@ -181,6 +186,19 @@ function Customize() {
     setArticleInTitle(newColor);
     document.documentElement.style.setProperty("--article-in-title-color", newColor);
   }
+
+  function handleArticleContent(e) {
+    const newColor = e.target.value;
+    setArticleContentTextColor(newColor);
+    document.documentElement.style.setProperty("--article-in-content-color", newColor);
+  }
+
+  function handleDescColor(e) {
+    const newColor = e.target.value;
+    setArticleDescColor(newColor);
+    document.documentElement.style.setProperty("--desc-color", newColor);
+  }
+  
 
   //Footer handling
 
@@ -354,11 +372,13 @@ function Customize() {
     --text-color: ${textColor};
     --title-primary-color: ${titlePrimaryColor};
     --title-secondary-color: ${titleSecondaryColor};
+    --desc-color: ${articleSCDesc};
     --blog-header-bg: ${blogHeaderBgColor};
     --article-title-color: ${articleTitleColor};
     --articleShowCaseContainer-bg-color: ${articleSCBgColor};
     --articleShowCaseContainer-hover-color: ${articleSCHover};
     --article-in-title-color: ${articleInTitle};
+    --article-in-content-color:${articleContentTextColor};
   }`;
   };
 
@@ -528,6 +548,7 @@ function Customize() {
       <Home articleModules={articleModules} />
     </div>
       <div className="optionCollection">
+
         <div className="optionContainer">
           <label>Article Title Color</label>
           <input type="color" value={articleTitleColor} onChange={handleArticleTitleColor} />
@@ -542,11 +563,15 @@ function Customize() {
           <input type="color" value={articleSCHover} onChange={handleArticleSCHover} />
         </div>
 
-              
+      </div>
+
+      <div className="optionCollection">
+
         <div className="optionContainer">
-          <label>Article In Title Color</label>
-          <input type="color" value={articleInTitle} onChange={handleArticleInTitle} />
+          <label>Description Color</label>
+          <input type="color" value={articleSCDesc} onChange={handleDescColor} />
         </div>
+
       </div>
 
       <label className="customizeLabeler">Individual Pages</label>
@@ -554,6 +579,20 @@ function Customize() {
         <Deniz_İçin_makale></Deniz_İçin_makale> {/*TODO: DEFINE A DEFAULT ARTICLE FOR THIS*/} 
       </div>
      
+      <div className="optionCollection">
+        <div className="optionContainer">
+          <label>Article In Title Color</label>
+          <input type="color" value={articleInTitle} onChange={handleArticleInTitle} />
+        </div>
+
+        <div className="optionContainer">
+          <label>Article content text color</label>
+          <input type="color" value={articleContentTextColor} onChange={handleArticleContent} />
+        </div>
+
+
+      </div>
+
       <div className="buttonContainer">
         <button onClick={downloadCSS}>Download CSS</button>
         <button onClick={saveThemeToServer}>Save Theme to Server</button>

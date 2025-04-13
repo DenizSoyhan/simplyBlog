@@ -1,5 +1,6 @@
 * {
-    font-family: 'Spectral', serif;
+    /*font-family:'Spectral', serif;*/
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; /*TODO: make it dynamic*/
     margin: 0;
     padding: 0;
   }
@@ -67,10 +68,20 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid var(--primary-color);
+
     line-height: 150%;
     font-size: 1.5rem;
     font-weight: bold;
+    margin-bottom: 0.5em;
+  }
+  .date{
+    margin: 0.1em 0em 0em 0.2em;
+
+    font-size: 0.9rem;
+    font-weight: 400;
+  }
+  .descDateContainer{
+    margin-left: 0.3em;
   }
   
   .description {
@@ -197,6 +208,8 @@
   
   .articleContainer p {
     margin-bottom: 1em;
+
+    color: var(--article-in-content-color);/*TODO: make it dynamic*/
   }
   
   .articleContainer img {
@@ -243,7 +256,7 @@
   
   /*CUSTOMIZERS*/
   .homeContainer{
-    border-top: 2px solid var(--article-in-title-color);
+    border-top: px solid var(--text-color);
     
   }
   .customizeContainer h1{
@@ -287,10 +300,12 @@
     text-align: center;
   }
   .optionContainer label{
-    
+    min-width: 235px;
+
     padding: 0.5em;
     margin-bottom:0.5em ;
-    background-color: var(--blog-header-bg);
+    background-color: #f5f5f5;
+    color: black;
     
     border-radius: 15px;
   }
@@ -339,6 +354,7 @@
   
   .articleShowCaseContainer {
     background-color: var(--articleShowCaseContainer-bg-color);
+    color: var(--desc-color);/*TODO: make it dynamic*/
   }
   
   .articleShowCaseContainer:hover {
@@ -347,7 +363,7 @@
   
   .titleDateContainer {
     color: var(--article-title-color);
-    border-bottom: 2px solid var(--article-title-color);
+
   }
   
   .articleContainer h1 {
@@ -442,6 +458,7 @@
 
 .directoryInfo {
   width: 80%;
+  max-width: 800px;
 
   margin: 15px auto;
   padding: 15px;
@@ -459,6 +476,8 @@
 
 .directoryInfo p {
   margin-bottom: 5px;
+
+  color: black;
 }
 
 
@@ -486,6 +505,7 @@
     
     color: var(--article-title-color);
     font-weight:500;
+    margin-bottom: 0.3em;
   }
   .seperator{
     width: 400px;
