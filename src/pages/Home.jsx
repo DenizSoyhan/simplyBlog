@@ -49,13 +49,17 @@ function Home({ articleModules }) {
                 <li className="article-item">
                   <div className="titleDateContainer">
                     <h2>{metadata.title || path2Title(articleName)}</h2>
+
+                  </div>
+                  <div className="descDateContainer">
+                    {metadata.description && (
+                      <p className="description">{metadata.description}</p>
+                    )}
                     {metadata.createdOn && (
-                      <p className="date">{new Date(metadata.createdOn).toLocaleDateString()}</p>
+                      <p className="date">{new Date(metadata.createdOn).toLocaleDateString("en-GB")}</p>
                     )}
                   </div>
-                  {metadata.description && (
-                    <p className="description">{metadata.description}</p>
-                  )}
+                 
                 </li>
               </div>
             </Link>

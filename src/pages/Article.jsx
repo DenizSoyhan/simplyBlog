@@ -14,15 +14,6 @@ function ArticlePage({ articles }) {
 
   return (
     <div>
-      {articleModule.metadata && (
-        <div className="article-metadata">
-          {articleModule.metadata.createdOn && (
-            <p className="date">
-              {new Date(articleModule.metadata.createdOn).toLocaleDateString()}
-            </p>
-          )}
-        </div>
-      )}
       
       <ArticleComponent />
     </div>

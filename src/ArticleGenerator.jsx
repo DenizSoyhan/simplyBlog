@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import './index.css'; 
+import './index.css';
 
 function ArticleGenerator() {
   const [title, setTitle] = useState("");
@@ -35,12 +35,12 @@ function ArticleGenerator() {
       alert("Please enter a title first for the articles so we can create a directory for your images");
       return;
     }
-  
+
     if (serverStatus !== "running") {
       alert("Server is not running. Please start the Express server first.");
       return;
     }
-  
+
     try {
       const response = await fetch('http://localhost:3001/api/create-image-directory', {
         method: 'POST',
@@ -51,9 +51,9 @@ function ArticleGenerator() {
           directoryName: title
         }),
       });
-      
+
       const result = await response.json();
-      
+
       if (result.success) {
         alert(`Image directory created: ./public/articleImages/${title}`);
       } else {
@@ -79,11 +79,11 @@ function ArticleGenerator() {
 
     setIsUploading(true);
     setUploadProgress(0);
-    
+
     // Create a FormData object to send the file
     const formData = new FormData();
     formData.append('image', file);
-    
+
     try {
       // Create image directory first if it doesn't exist
       await fetch('http://localhost:3001/api/create-image-directory', {
@@ -97,9 +97,9 @@ function ArticleGenerator() {
         method: 'POST',
         body: formData,
       });
-      
+
       const result = await response.json();
-      
+
       if (result.success) {
         setUploadProgress(100);
         setTimeout(() => {
@@ -157,17 +157,17 @@ function ArticleGenerator() {
 
     return newNumber;
   }
-  
+
   function title2FileName(someTitle) {
     const newFileNumber = getNextArticleNumber(); // Get the next number from local storage
     const res = `${newFileNumber}-${someTitle.split(" ").join("_")}`;
-    
+
     return res;
   }
 
-  function titleWithoutSpaces(anotherTitle){
+  function titleWithoutSpaces(anotherTitle) {
     const res = `${anotherTitle.split(" ").join("_")}`;
-    
+
     return res;
   }
 
@@ -177,13 +177,13 @@ function ArticleGenerator() {
       alert("Please enter a 'Title'");
       return;
     }
-  
+
     const finalFileName = title2FileName(title);
     const componentName = titleWithoutSpaces(title);
-    
+
     // escape line breaks and quotes in the description otherwise it breaks string literal
     const escapedDesc = desc.replace(/\n/g, "\\n").replace(/"/g, '\\"');
-  
+
     //metadata as a named export
     const metadata = `export const metadata = {
     title: "${title.replace(/"/g, '\\"')}",
@@ -193,30 +193,35 @@ function ArticleGenerator() {
     description: "${escapedDesc}",
     generatedBy: "ArticleGenerator"
   };\n\n`;
-  
+
     const jsxContent = `${metadata}
   export default function ${componentName}() {
     return (
       <div className="articleContainer">
-        <h1 className="articleTitle">${title.replace(/"/g, '\\"')/*double quotes would break the string literal*/}</h1>
+          <div className="titleAndDateContainer">
+            <h1 className="articleTitle">${title.replace(/"/g, '\\"')/*double quotes would break the string literal*/}</h1>
+            {metadata.createdOn && (
+              <h4 className="articleDate">{new Date(metadata.createdOn).toLocaleDateString("en-GB")}</h4>
+            )}
+        </div>
         ${previewContent
-          .split("\n")
-          .map((item) => {
-            if (item.startsWith("[Image:")) {
-              const imagePath = item.slice(7, -1);
-              return `<div className="imageContainer"><img src="${imagePath}" alt="Article Image" className="articleImage" /></div>`;
-            }
-            if (item.startsWith("[Video:")) {
-              const videoUrl = item.slice(8, -1);
-              return `<div className="iframeContainer"><iframe src="${videoUrl}" frameBorder="0" allowFullScreen className="articleVideo"></iframe></div>`;
-            }
-            return `<p className="articleText">${item.replace(/"/g, '\\"')}</p>`; //double quotes would break the string literal
-          })
-          .join("\n")}
+        .split("\n")
+        .map((item) => {
+          if (item.startsWith("[Image:")) {
+            const imagePath = item.slice(7, -1);
+            return `<div className="imageContainer"><img src="${imagePath}" alt="Article Image" className="articleImage" /></div>`;
+          }
+          if (item.startsWith("[Video:")) {
+            const videoUrl = item.slice(8, -1);
+            return `<div className="iframeContainer"><iframe src="${videoUrl}" frameBorder="0" allowFullScreen className="articleVideo"></iframe></div>`;
+          }
+          return `<p className="articleText">${item.replace(/"/g, '\\"')}</p>`; //double quotes would break the string literal
+        })
+        .join("\n")}
       </div>
     );
   }`;
-  
+
     return jsxContent;
   }
 
@@ -238,7 +243,7 @@ function ArticleGenerator() {
       setIsSaving(false);
       return;
     }
-    
+
     try {
       const response = await fetch('http://localhost:3001/api/save-article', {
         method: 'POST',
@@ -250,9 +255,9 @@ function ArticleGenerator() {
           content: jsxContent
         }),
       });
-      
+
       const result = await response.json();
-      
+
       if (result.success) {
         alert('Article saved successfully to articles directory!');
       } else {
@@ -271,9 +276,9 @@ function ArticleGenerator() {
   function generateJSXFile() {
     const jsxContent = generateJSXContent();
     if (!jsxContent) return;
-    
+
     const finalFileName = title2FileName(title);
-    
+
     const blob = new Blob([jsxContent], { type: "text/javascript" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
@@ -282,15 +287,15 @@ function ArticleGenerator() {
     link.click();
     document.body.removeChild(link);
   }
-  
+
   // Render a progress bar for image uploads
   const renderUploadProgress = () => {
     if (!isUploading) return null;
-    
+
     return (
       <div className="upload-progress-container">
-        <div 
-          className="upload-progress-bar" 
+        <div
+          className="upload-progress-bar"
           style={{ width: `${uploadProgress}%` }}
         ></div>
         <div className="upload-progress-text">
@@ -303,17 +308,17 @@ function ArticleGenerator() {
   return (
     <div className="generatorContainer">
       <div className="serverStatus">
-        Server Status: 
+        Server Status:
         <span className={`status-indicator ${serverStatus}`}>
-          {serverStatus === "running" ? "Connected" : 
-           serverStatus === "offline" ? "Offline" : 
-           serverStatus === "error" ? "Error" : "Unknown"}
+          {serverStatus === "running" ? "Connected" :
+            serverStatus === "offline" ? "Offline" :
+              serverStatus === "error" ? "Error" : "Unknown"}
         </span>
         <button onClick={checkServerStatus} className="refreshButton">Refresh</button>
       </div>
 
       <h1>Article Generator ⚙️</h1>
-      
+
       <input
         type="text"
         placeholder="Article Title"
@@ -339,14 +344,14 @@ function ArticleGenerator() {
         value={content}
         onChange={(e) => setContent(e.target.value)}
       />
-      
+
       <input type="file" accept="image/*" onChange={addImage} style={{ display: "none" }} id="fileInput" />
-   
+
       <div className="buttonContainer">
         <div className="tooltip-container">
-          <button 
-            onClick={() => document.getElementById("fileInput").click()} 
-            className="tooltip-button" 
+          <button
+            onClick={() => document.getElementById("fileInput").click()}
+            className="tooltip-button"
             disabled={isUploading}
           >
             {isUploading ? "Uploading..." : "Add Image"}
@@ -360,11 +365,11 @@ function ArticleGenerator() {
       <div className="buttonContainer">
         <button onClick={saveContent}>SAVE</button>
       </div>
-      
+
       <div className="buttonContainer">
         <button onClick={generateJSXFile}>Generate JSX File</button>
-        <button 
-          onClick={saveToArticlesDirectory} 
+        <button
+          onClick={saveToArticlesDirectory}
           disabled={isSaving || serverStatus !== "running"}
           className={`saveButton ${serverStatus !== "running" ? "disabled" : ""}`}
         >
@@ -375,16 +380,23 @@ function ArticleGenerator() {
       {/* Preview Box */}
       <h1 className="previewTitle">PREVIEW</h1>
       <div className="articleContainer">
-        <h1 className="articleTitle">{title ? title : 'Title of the Article'}</h1>
+
+        <div className="titleAndDateContainer">
+          <h1 className="articleTitle">{title ? title : 'Title of the Article'}</h1>
+          {(
+            <h4 className="articleDate">{new Date().toLocaleDateString("en-GB")}</h4>
+          )}
+        </div>
+
         {previewContent
           .split("\n")
           .map((item, index) => {
             if (item.startsWith("[Image:")) {
-              const imagePath = item.slice(7, -1); 
+              const imagePath = item.slice(7, -1);
               return <div key={index} className="imageContainer"><img src={imagePath} alt="Article Image" className="articleImage" /></div>;
             }
             if (item.startsWith("[Video:")) {
-              const videoUrl = item.slice(8, -1); 
+              const videoUrl = item.slice(8, -1);
               return <div key={index} className="iframeContainer"><iframe width="560" height="315" src={videoUrl} frameBorder="0" allowFullScreen className="articleVideo"></iframe></div>;
             }
             return <p key={index} className="articleText">{item}</p>;
