@@ -12,6 +12,10 @@ function ArticleGenerator() {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
 
+  const [showQuoteModal, setShowQuoteModal] = useState(false);
+  const [quoteTextInput, setQuoteTextInput] = useState("");
+  const [quoteOwner, setQuoteOwner] = useState("");
+
   useEffect(() => {
     checkServerStatus();
   }, []);
@@ -144,6 +148,17 @@ function ArticleGenerator() {
       setContent((prevContent) => prevContent + `\n[Video: ${embedUrl}]`);
     }
   }
+  function handleAddQuote() {
+
+    if(quoteTextInput!==""){
+      setContent((prevContent) =>
+        prevContent + `\n[Quote:${quoteTextInput}|${quoteOwner}]`
+      );
+    setQuoteTextInput("");
+    setQuoteOwner("");
+    }
+    setShowQuoteModal(false);
+  }
 
   //save content and display preview
   function saveContent() {
@@ -207,6 +222,7 @@ function ArticleGenerator() {
         ${previewContent
         .split("\n")
         .map((item) => {
+
           if (item.startsWith("[Image:")) {
             const imagePath = item.slice(7, -1);
             return `<div className="imageContainer"><img src="${imagePath}" alt="Article Image" className="articleImage" /></div>`;
@@ -215,6 +231,24 @@ function ArticleGenerator() {
             const videoUrl = item.slice(8, -1);
             return `<div className="iframeContainer"><iframe src="${videoUrl}" frameBorder="0" allowFullScreen className="articleVideo"></iframe></div>`;
           }
+          if (item.startsWith("[Quote:")) {
+
+            const fullQuote = item.slice(7,-1);
+            var splittedQuote = fullQuote.split("|");
+
+            const quoteText= splittedQuote[0].trim();
+            let quoteOwnerV = splittedQuote[1].trim();
+
+            if(quoteOwnerV!=""){
+              quoteOwnerV = "-" + splittedQuote[1].trim();
+            }
+            console.log(fullQuote,quoteText,quoteOwner);
+            return `<div className="quoteContainer">
+              <div className="quoteText">${quoteText}</div>
+              <div className="quoteOwner">${quoteOwnerV}</div>
+            </div>`
+          }
+
           return `<p className="articleText">${item.replace(/"/g, '\\"')}</p>`; //double quotes would break the string literal
         })
         .join("\n")}
@@ -316,7 +350,28 @@ function ArticleGenerator() {
         </span>
         <button onClick={checkServerStatus} className="refreshButton">Refresh</button>
       </div>
-
+      {showQuoteModal && (
+      <div className="quote-modal">
+        <div className="quote-modal-content">
+          <h3>Add a quote from someone!</h3>
+          <textarea
+          placeholder="Quote text goes here"
+          value={quoteTextInput}
+          onChange={(e) => setQuoteTextInput(e.target.value)}
+          rows={4}
+          style={{ width: "100%" }}
+        />
+          <input
+            type="text"
+            placeholder="Who said this?"
+            value={quoteOwner}
+            onChange={(e) => setQuoteOwner(e.target.value)}
+          />
+          <button onClick={handleAddQuote}>Add</button>
+          <button onClick={() => setShowQuoteModal(false)}>Cancel</button>
+        </div>
+      </div>
+)}
       <h1>Article Generator ⚙️</h1>
 
       <input
@@ -360,6 +415,8 @@ function ArticleGenerator() {
         </div>
 
         <button onClick={addVideo}>Add YouTube Video</button>
+        <button onClick={() => setShowQuoteModal(true)}>Add Quote</button>
+
       </div>
 
       <div className="buttonContainer">
@@ -399,7 +456,19 @@ function ArticleGenerator() {
               const videoUrl = item.slice(8, -1);
               return <div key={index} className="iframeContainer"><iframe width="560" height="315" src={videoUrl} frameBorder="0" allowFullScreen className="articleVideo"></iframe></div>;
             }
+            if(item.startsWith("[Quote:")){
+              const fullQuote = item.slice(7,-1);
+              var splittedQuote = fullQuote.split("|");
+              const quoteText= splittedQuote[0].trim();
+              const quoteOwner= "-" + splittedQuote[1].trim();
+
+              return <div key={index} className="quoteContainer">
+                <div className="quoteText">{quoteText}</div>
+                <div className="quoteOwner">{quoteOwner}</div>
+              </div>
+            }
             return <p key={index} className="articleText">{item}</p>;
+
           })}
       </div>
     </div>

@@ -189,7 +189,7 @@
     opacity: 1;
   }
   
-  /* ARTICLES */
+  /* ARTICLE PAGE STYLING */
   .articleContainer {
     width: 80%;
     max-width: 980px;
@@ -211,6 +211,83 @@
 
     color: var(--article-in-content-color);/*TODO: make it dynamic*/
   }
+
+  .quoteContainer{
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    font-size: 1.3rem;
+    font-style: italic;
+
+  }
+  .quoteText{
+    font-weight: 300;
+  }
+  .quoteOwner{
+    margin-top: 0.5em;
+
+    font-weight: 300;
+    width: 60%;
+    text-align: right;
+  }
+
+  .quote-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 10000;
+  }
+  
+  .quote-modal-content {
+    background: var(--articleShowCaseContainer-bg-color);
+    padding: 1.5rem;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 300px;
+  }
+
+  .quote-modal-content {
+    background: var(--articleShowCaseContainer-bg-color);
+    padding: 1.5rem;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 400px;
+    height: 300px;
+
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .quote-modal-content input {
+    margin: 0;
+
+    width: 100%;
+
+  }
+
+  .quote-modal-content button {
+    margin: 0.25em;
+    padding: 0.5em;
+
+    min-width: 100px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
   
   .articleContainer img {
     display: block;
@@ -354,7 +431,7 @@
   
   .articleShowCaseContainer {
     background-color: var(--articleShowCaseContainer-bg-color);
-    color: var(--desc-color);/*TODO: make it dynamic*/
+    color: var(--desc-color);
   }
   
   .articleShowCaseContainer:hover {
@@ -372,7 +449,7 @@
   }
   
   .tooltip-text {
-    background-color: var(--article-in-title-color);
+    background-color: var(--articleShowCaseContainer-bg-color);
     color: var(--text-color);
   }
   .dynamicToolTipText{
