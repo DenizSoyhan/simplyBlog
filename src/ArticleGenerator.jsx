@@ -173,10 +173,33 @@ function ArticleGenerator() {
     return newNumber;
   }
 
-  function title2FileName(someTitle) {
-    const newFileNumber = getNextArticleNumber(); // Get the next number from local storage
-    const res = `${newFileNumber}-${someTitle.split(" ").join("_")}`;
+  function handleCheckboxClick(e) {
+    const clicked = e.target;
+    if (clicked.id === "pinned") {
+      document.getElementById("unlisted").checked = false;
+    } else if (clicked.id === "unlisted") {
+      document.getElementById("pinned").checked = false;
+    }
+  }
+  
 
+  function title2FileName(someTitle) {
+    const isPinned = document.getElementById("pinned")?.checked;
+    const isUnlisted = document.getElementById("unlisted")?.checked;
+  
+    let res = "";
+  
+    if (isPinned) {
+      const newFileNumber = 'P';
+      res = `${newFileNumber}-${someTitle.split(" ").join("_")}`;
+    } else if (isUnlisted) {
+      const newFileNumber = 'U';
+      res = `${newFileNumber}-${someTitle.split(" ").join("_")}`;
+    } else {
+      const newFileNumber = getNextArticleNumber(); // Get the next number from local storage
+      res = `${newFileNumber}-${someTitle.split(" ").join("_")}`;
+    }
+  
     return res;
   }
 
@@ -242,7 +265,7 @@ function ArticleGenerator() {
             if(quoteOwnerV!=""){
               quoteOwnerV = "-" + splittedQuote[1].trim();
             }
-            console.log(fullQuote,quoteText,quoteOwner);
+
             return `<div className="quoteContainer">
               <div className="quoteText">${quoteText}</div>
               <div className="quoteOwner">${quoteOwnerV}</div>
@@ -422,6 +445,23 @@ function ArticleGenerator() {
       <div className="buttonContainer">
         <button onClick={saveContent}>SAVE</button>
       </div>
+
+        <div className="checkBoxContainer">
+          <div className="checkbox">
+            <label>If you want to be pinned the article to top:</label>
+            
+            <input type="checkbox" id="pinned" onClick={handleCheckboxClick} />
+
+          </div>
+
+          <div className="checkbox">
+            <label>If you want your articles not show up on the front page and only be accesible via a direct link:</label>
+            <input type="checkbox" id="unlisted" onClick={handleCheckboxClick} />
+
+          </div>
+
+        </div>
+
 
       <div className="buttonContainer">
         <button onClick={generateJSXFile}>Generate JSX File</button>

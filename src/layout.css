@@ -38,6 +38,8 @@
   }
   
   .articleShowCaseContainer {
+    position: relative;
+
     padding: 1em;
     margin: 1em;
 
@@ -62,6 +64,22 @@
   
   .articleShowCaseContainer li {
     list-style: none;    
+  }
+
+  .pinnedInfoContainer{
+    
+    position: absolute;
+
+    display: flex;
+
+    top: 5px;
+    right: 8px;
+
+    color: var(--desc-color);
+  }
+
+  .pinnedInfoContainer svg{
+    margin-left: 5px;
   }
   
   .titleDateContainer {
@@ -134,6 +152,36 @@
     
   }
 
+  .checkBoxContainer{
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+  }
+  
+  .checkbox{
+    width: 100%;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+  }
+  .checkbox{
+    padding: 0.25em;
+
+  }
+
+  .checkbox input{
+    margin: 0;
+    width: 30px;
+
+    transform: scale(1.5);
+    cursor: pointer;
+  }
+
   .directoryButtonContainer{
     display: flex;
     flex-direction: column;
@@ -155,6 +203,8 @@
     margin: 0em auto 0em auto !important;
     border-bottom: 1px solid var(--text-color);
   }
+
+
 
   
   /* Tooltip */
