@@ -1,14 +1,14 @@
 :root {
+    --font-family: Cantarell;
     --main-bg-color: #1d1e20;
     --text-color: #dadadb;
     --title-primary-color: #9b9c9d;
     --title-secondary-color: #727475;
-    --desc-color:rgb(155, 156, 157);
+    --desc-color: #c4c4c5;
     --blog-header-bg: #1d1e20;
     --article-title-color: #dadadb;
     --articleShowCaseContainer-bg-color: #2e2e33;
     --articleShowCaseContainer-hover-color: #454647;
     --article-in-title-color: #c4c4c5;
-    --article-in-content-color:rgb(196, 196, 197);
-  
+    --article-in-content-color:#ffffff;
   }

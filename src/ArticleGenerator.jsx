@@ -141,15 +141,33 @@ function ArticleGenerator() {
   }
 
   // add YouTube video via iframe
+  //I don't know how many forms a youtube URL can take so I am patching it as I need a feature.
+  //--First feature: time stamped videos so your users can jump onto that time directly
   function addVideo() {
     const url = prompt("Enter YouTube Video URL:");
     if (url) {
-      const embedUrl = url.replace("watch?v=", "embed/");
-      setContent((prevContent) => prevContent + `\n[Video: ${embedUrl}]`);
+      try {
+        const parsed = new URL(url);
+        const videoId = parsed.searchParams.get("v");
+        let start = 0;
+  
+        // If there's a time param (t=4998s), extract it
+        if (parsed.searchParams.has("t")) {
+          const tParam = parsed.searchParams.get("t");
+          // Remove the 's' if it exists and parse to int
+          start = parseInt(tParam.replace('s', ''), 10);
+        }
+  
+        const embedUrl = `https://www.youtube.com/embed/${videoId}${start ? `?start=${start}` : ''}`;
+        setContent((prevContent) => prevContent + `\n[Video: ${embedUrl}]`);
+      } catch (err) {
+        alert("Invalid YouTube URL");
+      }
     }
   }
+  
+  
   function handleAddQuote() {
-
     if(quoteTextInput!==""){
       setContent((prevContent) =>
         prevContent + `\n[Quote:${quoteTextInput}|${quoteOwner}]`
@@ -182,7 +200,6 @@ function ArticleGenerator() {
     }
   }
   
-
   function title2FileName(someTitle) {
     const isPinned = document.getElementById("pinned")?.checked;
     const isUnlisted = document.getElementById("unlisted")?.checked;
@@ -205,8 +222,82 @@ function ArticleGenerator() {
 
   function titleWithoutSpaces(anotherTitle) {
     const res = `${anotherTitle.split(" ").join("_")}`;
-
     return res;
+  }
+
+  function paragParser(paragraph) {
+    // handle empty paragraphs
+    if (!paragraph.trim()) return paragraph;
+    
+    // process the text char by char
+    let result = '';
+    let currentPosition = 0;
+    
+    // helper function to find closing markers so we can have underlined-bold-italic styling all at the same time
+    function findClosingMarker(text, marker, startPos) {
+      const markerLength = marker.length;
+      const searchPos = startPos + markerLength;
+      const closingPos = text.indexOf(marker, searchPos);
+      return closingPos !== -1 ? closingPos : -1;
+    }
+    
+    // process all formatting markers
+    while (currentPosition < paragraph.length) {
+      // look for first apperance of the opening markers
+      const boldStart = paragraph.indexOf('**', currentPosition);
+      const italicStart = paragraph.indexOf('##', currentPosition);
+      const underlineStart = paragraph.indexOf('__', currentPosition);
+      
+      // Find the first marker (if any)
+      const markers = [
+        { type: 'bold', pos: boldStart, marker: '**', className: 'bold' },
+        { type: 'italic', pos: italicStart, marker: '##', className: 'italic' },
+        { type: 'underline', pos: underlineStart, marker: '__', className: 'underlined' }
+      ].filter(m => m.pos !== -1);
+      
+      // sort markers by position
+      markers.sort((a, b) => a.pos - b.pos);
+      
+      // if no markers found, add remaining text and exit
+      if (markers.length === 0) {
+        result += paragraph.substring(currentPosition);
+        break;
+      }
+      
+      // get the first marker
+      const firstMarker = markers[0];
+      
+      // add text before the marker
+      if (firstMarker.pos > currentPosition) {
+        result += paragraph.substring(currentPosition, firstMarker.pos);
+      }
+      
+      // find the closing marker using our helper function
+      const closingPos = findClosingMarker(paragraph, firstMarker.marker, firstMarker.pos);
+      
+      if (closingPos === -1) {
+        // No closing marker found, treat as regular text
+        result += firstMarker.marker;
+        currentPosition = firstMarker.pos + firstMarker.marker.length;
+      } else {
+        // Extract the text between markers
+        const markerContent = paragraph.substring(
+          firstMarker.pos + firstMarker.marker.length, 
+          closingPos
+        );
+        
+        // recursively process the content inside the markers (for nested formatting like **__text__**)
+        const processedContent = paragParser(markerContent);
+        
+        // Add the formatted content
+        result += `<span class="${firstMarker.className}">${processedContent}</span>`;
+        
+        // Move position past the closing marker
+        currentPosition = closingPos + firstMarker.marker.length;
+      }
+    }
+    
+    return result;
   }
 
   // generate the JSX file with class names
@@ -245,7 +336,6 @@ function ArticleGenerator() {
         ${previewContent
         .split("\n")
         .map((item) => {
-
           if (item.startsWith("[Image:")) {
             const imagePath = item.slice(7, -1);
             return `<div className="imageContainer"><img src="${imagePath}" alt="Article Image" className="articleImage" /></div>`;
@@ -255,7 +345,6 @@ function ArticleGenerator() {
             return `<div className="iframeContainer"><iframe src="${videoUrl}" frameBorder="0" allowFullScreen className="articleVideo"></iframe></div>`;
           }
           if (item.startsWith("[Quote:")) {
-
             const fullQuote = item.slice(7,-1);
             var splittedQuote = fullQuote.split("|");
 
@@ -271,9 +360,13 @@ function ArticleGenerator() {
               <div className="quoteOwner">${quoteOwnerV}</div>
             </div>`
           }
-
-          return `<p className="articleText">${item.replace(/"/g, '\\"')}</p>`; //double quotes would break the string literal
+          // For regular paragraphs, use the paragraph parser and dangerouslySetInnerHTML
+          if (!item.startsWith("[") && item.trim()) {
+            return `<p className="articleText" dangerouslySetInnerHTML={{ __html: '${paragParser(item).replace(/'/g, "\\'").replace(/"/g, '\\"')}' }} />`;
+          }
+          return '';
         })
+        .filter(Boolean)
         .join("\n")}
       </div>
     );
@@ -414,6 +507,16 @@ function ArticleGenerator() {
       <div className="directoryInfo">
         <h3>Images will be uploaded to: ./public/articleImages/{title ? title : 'name-of-file'}</h3>
         <p>The directory will be created automatically when you upload your first image. Try not to change your title as the directory will be named after the article title!</p>
+        <div className="formattingGuide">
+          <h3>Text Formatting Guide:</h3>
+          <p>
+            <span className="bold">**Bold Text**</span> --&gt; Use ** around text for bold
+            <br />
+            <span className="italic">##Italic Text##</span> --&gt; Use ## around text for italic
+            <br />
+            __<span className="underlined">Underlined Text</span>__ --&gt; Use __ around text for underline
+          </p>
+        </div>
         {renderUploadProgress()}
       </div>
 
@@ -500,16 +603,23 @@ function ArticleGenerator() {
               const fullQuote = item.slice(7,-1);
               var splittedQuote = fullQuote.split("|");
               const quoteText= splittedQuote[0].trim();
-              const quoteOwner= "-" + splittedQuote[1].trim();
+              let quoteOwnerV = splittedQuote[1].trim();
+              
+              if(quoteOwnerV!=""){
+                quoteOwnerV = "-" + quoteOwnerV;
+              }
 
               return <div key={index} className="quoteContainer">
                 <div className="quoteText">{quoteText}</div>
-                <div className="quoteOwner">{quoteOwner}</div>
+                <div className="quoteOwner">{quoteOwnerV}</div>
               </div>
             }
-            return <p key={index} className="articleText">{item}</p>;
-
-          })}
+            // For regular paragraphs, use the paragraph parser and dangerouslySetInnerHTML
+            if (!item.startsWith("[") && item.trim()) {
+              return <p key={index} className="articleText" dangerouslySetInnerHTML={{ __html: paragParser(item) }} />;
+            }
+            return null;
+          }).filter(Boolean)}
       </div>
     </div>
   );

@@ -8,7 +8,30 @@ import BlogFooterConfig from "./FooterConfig";
 const articleModules = import.meta.glob("../defaultAssets/defaultArticles/*.jsx", { eager: true });
 
 function Customize() {
+
+  const commonFonts = [
+    "Cantarell",
+    "Spectral",
+    "monospace",
+    "Arial",
+    "Verdana",
+    "Helvetica",
+    "Courier",
+    "Times New Roman",
+    "Georgia",
+    "Courier New",
+    "Tahoma",
+    "Palatino Linotype",
+    "Impact",
+
+  ];
+
+
   /* Setting default values for hooks*/
+
+  //Fonts
+  const [selectedFont, setSelectedFont] = useState("Arial");
+  const [hoveredFont, setHoveredFont] = useState(null);
 
   //Blog name and slogan
   const [name, setName] = useState("");
@@ -16,7 +39,7 @@ function Customize() {
 
   //Colors
   const [bgMainColor, setBgMainColor] = useState("#ffffff");
-  const [textColor, setTextColor] = useState("#000000");
+  const [textColor, setTextColor] = useState("#000000"); //TODO: REMOVE THIS ALREADY
   const [titlePrimaryColor, setTitlePrimaryColor] = useState("#000000");
   const [titleSecondaryColor, setTitleSecondaryColor] = useState("#000000");
   const [blogHeaderBgColor, setBlogHeaderBgColor] = useState("#ffffff");
@@ -26,8 +49,8 @@ function Customize() {
   const [articleSCDesc, setArticleDescColor] = useState("#000000");
   const [articleInTitle, setArticleInTitle] = useState("#000000");
   const [articleContentTextColor, setArticleContentTextColor] = useState("#ffffff");
- 
-  
+
+
   //Status for theme change
   const [saveStatus, setSaveStatus] = useState("");
 
@@ -43,25 +66,31 @@ function Customize() {
   const [pWebsiteV, setpWebsiteV] = useState("");
   const [youtubeV, setYoutube] = useState("");
 
+  useEffect(() => {
+    const computedFont = getComputedStyle(document.body).fontFamily.split(",")[0].replace(/['"]/g, "").trim();
+    if (commonFonts.includes(computedFont)) {
+      setSelectedFont(computedFont);
+    }
+  }, []);
 
   useEffect(() => {
-    
+
 
     // Helper function to convert any CSS color format to hex
     // This is here only for me and 2 other people that uses hsl values while styling
     const convertToHex = (colorValue) => {
       // If it's already a hex value, return it
       if (colorValue.startsWith("#")) return colorValue;
-      
+
       // Create a temporary element to compute the RGB value
       const tempEl = document.createElement("div");
       tempEl.style.color = colorValue;
       document.body.appendChild(tempEl);
-      
+
       // Get computed value and convert to hex
       const computedColor = getComputedStyle(tempEl).color;
       document.body.removeChild(tempEl);
-      
+
       // Parse RGB values
       const rgbMatch = computedColor.match(/\d+/g);
       if (rgbMatch && rgbMatch.length >= 3) {
@@ -69,12 +98,12 @@ function Customize() {
         console.log(rgbMatch)
         return `#${Number(r).toString(16).padStart(2, '0')}${Number(g).toString(16).padStart(2, '0')}${Number(b).toString(16).padStart(2, '0')}`;
       }
-      
+
       return colorValue;
     };
 
     const rootStyles = getComputedStyle(document.documentElement);
-    
+
     setBgMainColor(convertToHex(rootStyles.getPropertyValue("--main-bg-color").trim() || "#ffffff"));
     setTextColor(convertToHex(rootStyles.getPropertyValue("--text-color").trim() || "#000000"));
     setTitlePrimaryColor(convertToHex(rootStyles.getPropertyValue("--title-primary-color").trim() || "#000000"));
@@ -94,10 +123,11 @@ function Customize() {
       const contentName = blogNameEl.textContent;
       const contentSlogan = blogSloganEl.textContent;
       setName(contentName);
-      setSlogan(contentSlogan);    }
+      setSlogan(contentSlogan);
+    }
 
 
-  
+
 
   }, []);
 
@@ -105,7 +135,7 @@ function Customize() {
     const loadFooterConfig = async () => {
       const module = await import("./FooterConfig.jsx");
       const config = module.default;
-  
+
       setCreatorName(config.personName || "");
       setCreatorContact(config.contact || "");
       setInsta(config.insta || "");
@@ -116,71 +146,71 @@ function Customize() {
       setpWebsiteV(config.pWebsite || "");
       setYoutube(config.youtube || "");
     };
-  
+
     loadFooterConfig();
   }, []);
 
   /*Color and name handling*/
-  function handleBlogNameChange(e){
+  function handleBlogNameChange(e) {
     const newName = e.target.value;
     setName(newName);
-    document.getElementById("blogName").textContent=newName;
+    document.getElementById("blogName").textContent = newName;
   }
 
-  function handleSloganChange(e){
+  function handleSloganChange(e) {
     const newName = e.target.value;
     setSlogan(newName);
-    document.getElementById("slogan").textContent=newName;
+    document.getElementById("slogan").textContent = newName;
   }
-  
+
   function handleBgMainColor(e) {
     const newColor = e.target.value;
     setBgMainColor(newColor);
     document.documentElement.style.setProperty("--main-bg-color", newColor);
   }
-  
+
   function handleTextColor(e) {
     const newColor = e.target.value;
     setTextColor(newColor);
     document.documentElement.style.setProperty("--text-color", newColor);
   }
-  
+
   function handleTitlePrimaryColor(e) {
     const newColor = e.target.value;
     setTitlePrimaryColor(newColor);
     document.documentElement.style.setProperty("--title-primary-color", newColor);
   }
-  
+
   function handleTitleSecondaryColor(e) {
     const newColor = e.target.value;
     setTitleSecondaryColor(newColor);
     document.documentElement.style.setProperty("--title-secondary-color", newColor);
   }
-  
+
   function handleBlogHeaderBgColor(e) {
     const newColor = e.target.value;
     setBlogHeaderBgColor(newColor);
     document.documentElement.style.setProperty("--blog-header-bg", newColor);
   }
-  
+
   function handleArticleTitleColor(e) {
     const newColor = e.target.value;
     setArticleTitleColor(newColor);
     document.documentElement.style.setProperty("--article-title-color", newColor);
   }
-  
+
   function handleArticleSCBgColor(e) {
     const newColor = e.target.value;
     setArticleSCBgColor(newColor);
     document.documentElement.style.setProperty("--articleShowCaseContainer-bg-color", newColor);
   }
-  
+
   function handleArticleSCHover(e) {
     const newColor = e.target.value;
     setArticleSCHover(newColor);
     document.documentElement.style.setProperty("--articleShowCaseContainer-hover-color", newColor);
   }
-  
+
   function handleArticleInTitle(e) {
     const newColor = e.target.value;
     setArticleInTitle(newColor);
@@ -198,124 +228,124 @@ function Customize() {
     setArticleDescColor(newColor);
     document.documentElement.style.setProperty("--desc-color", newColor);
   }
-  
+
 
   //Footer handling
 
-  function handleCreatorName(e){
+  function handleCreatorName(e) {
     const newCName = e.target.value;
     setCreatorName(newCName);
     document.getElementById("creatorName").textContent = newCName;
   }
-  
-  function handleCreatorContact(e){
-    const newCContact=e.target.value;
+
+  function handleCreatorContact(e) {
+    const newCContact = e.target.value;
     setCreatorContact(newCContact);
     document.getElementById("creatorContact").textContent = newCContact;
   }
 
-  function handleCreatorInsta(e){
-    const newCInsta=e.target.value;
+  function handleCreatorInsta(e) {
+    const newCInsta = e.target.value;
 
-    if(newCInsta ===""){
+    if (newCInsta === "") {
       document.getElementById("instaContainer").classList.add("hide");
       setInsta(newCInsta);
     }
-    else{
+    else {
       document.getElementById("instaContainer").classList.remove("hide");
       setInsta(newCInsta);
-      document.getElementById("instaContainer").childNodes[0].href=newCInsta;
+      document.getElementById("instaContainer").childNodes[0].href = newCInsta;
     }
   }
 
-  function handleCreatorGithub(e){
-    const newCGithub=e.target.value;
+  function handleCreatorGithub(e) {
+    const newCGithub = e.target.value;
 
-    if(newCGithub ===""){
+    if (newCGithub === "") {
       document.getElementById("githubContainer").classList.add("hide");
       setGithubV(newCGithub);
     }
-    else{
+    else {
       document.getElementById("githubContainer").classList.remove("hide");
       setGithubV(newCGithub);
-      document.getElementById("githubContainer").childNodes[0].href=newCGithub;
+      document.getElementById("githubContainer").childNodes[0].href = newCGithub;
     }
   }
 
-  function handleCreatorTwitter(e){
-    const newCTwitter=e.target.value;
+  function handleCreatorTwitter(e) {
+    const newCTwitter = e.target.value;
 
-    if(newCTwitter ===""){
+    if (newCTwitter === "") {
       document.getElementById("twitterContainer").classList.add("hide");
       setTwitterV(newCTwitter);
     }
-    else{
+    else {
       document.getElementById("twitterContainer").classList.remove("hide");
       setTwitterV(newCTwitter);
-      document.getElementById("twitterContainer").childNodes[0].href=newCTwitter;
+      document.getElementById("twitterContainer").childNodes[0].href = newCTwitter;
     }
   }
 
-  function handlecreatorLinkedin(e){
-    const newCLinkedin=e.target.value;
+  function handlecreatorLinkedin(e) {
+    const newCLinkedin = e.target.value;
 
-    if(newCLinkedin ===""){
+    if (newCLinkedin === "") {
       document.getElementById("linkedinContainer").classList.add("hide");
       setLinkedinV(newCLinkedin);
     }
-    else{
+    else {
       document.getElementById("linkedinContainer").classList.remove("hide");
       setLinkedinV(newCLinkedin);
-      document.getElementById("linkedinContainer").childNodes[0].href=newCLinkedin;
+      document.getElementById("linkedinContainer").childNodes[0].href = newCLinkedin;
     }
   }
-  
-  function handleCreatorFacebook(e){
-    const newCFacebook=e.target.value;
 
-    if(newCFacebook ===""){
+  function handleCreatorFacebook(e) {
+    const newCFacebook = e.target.value;
+
+    if (newCFacebook === "") {
       document.getElementById("facebookContainer").classList.add("hide");
       setFacebookV(newCFacebook);
     }
-    else{
+    else {
       document.getElementById("facebookContainer").classList.remove("hide");
       setFacebookV(newCFacebook);
-      document.getElementById("facebookContainer").childNodes[0].href=newCFacebook;
+      document.getElementById("facebookContainer").childNodes[0].href = newCFacebook;
     }
   }
 
-  function handleCreatorWebsite(e){
-    const newCWebsite=e.target.value;
+  function handleCreatorWebsite(e) {
+    const newCWebsite = e.target.value;
 
-    if(newCWebsite ===""){
+    if (newCWebsite === "") {
       document.getElementById("websiteContainer").classList.add("hide");
       setpWebsiteV(newCWebsite);
     }
-    else{
+    else {
       document.getElementById("websiteContainer").classList.remove("hide");
       setpWebsiteV(newCWebsite);
-      document.getElementById("websiteContainer").childNodes[0].href=newCWebsite;
+      document.getElementById("websiteContainer").childNodes[0].href = newCWebsite;
     }
   }
 
-  function handleCreatorYoutube(e){
-    const newCYoutube=e.target.value;
+  function handleCreatorYoutube(e) {
+    const newCYoutube = e.target.value;
 
-    if(newCYoutube ===""){
+    if (newCYoutube === "") {
       document.getElementById("youtubeContainer").classList.add("hide");
       setYoutube(newCYoutube);
     }
-    else{
+    else {
       document.getElementById("youtubeContainer").classList.remove("hide");
       setYoutube(newCYoutube);
-      document.getElementById("youtubeContainer").childNodes[0].href=newCYoutube;
+      document.getElementById("youtubeContainer").childNodes[0].href = newCYoutube;
     }
   }
 
 
   //generating, downloading, saving stuff
 
-  const generateBlogConfig = () =>{
+  const generateBlogConfig = () => {
     return `export const BlogConfig = {
     blogName: "${name}",
     slogan: "${slogan}"
@@ -341,7 +371,7 @@ function Customize() {
     try {
       setSaveStatus("Saving config...");
       const configContent = generateBlogConfig();
-      
+
       // Changed the endpoint to /api/save-blog-config instead of /api/save-theme
       const response = await fetch('http://localhost:3001/api/save-blog-config', {
         method: 'POST',
@@ -350,9 +380,9 @@ function Customize() {
         },
         body: JSON.stringify({ configContent }),
       });
-      
+
       const data = await response.json();
-      
+
       if (data.success) {
         setSaveStatus("Blog configuration saved successfully!");
         // Clear the success message after 3 seconds
@@ -368,6 +398,7 @@ function Customize() {
 
   const generateCSS = () => {
     return `:root {
+    --font-family: ${selectedFont};
     --main-bg-color: ${bgMainColor};
     --text-color: ${textColor};
     --title-primary-color: ${titlePrimaryColor};
@@ -398,7 +429,7 @@ function Customize() {
     try {
       setSaveStatus("Saving theme...");
       const cssContent = generateCSS();
-      
+
       const response = await fetch('http://localhost:3001/api/save-theme', {
         method: 'POST',
         headers: {
@@ -406,9 +437,9 @@ function Customize() {
         },
         body: JSON.stringify({ cssContent }),
       });
-      
+
       const data = await response.json();
-      
+
       if (data.success) {
         setSaveStatus("Theme saved successfully!");
         // Clear the success message after 3 seconds
@@ -455,7 +486,7 @@ function Customize() {
     try {
       setSaveStatus("Saving footer configuration...");
       const footerContent = generateFooter();
-      
+
       const response = await fetch('http://localhost:3001/api/save-footer-config', {
         method: 'POST',
         headers: {
@@ -463,9 +494,9 @@ function Customize() {
         },
         body: JSON.stringify({ footerContent }),
       });
-      
+
       const data = await response.json();
-      
+
       if (data.success) {
         setSaveStatus("Footer configuration saved successfully!");
         // Clear the success message after 3 seconds
@@ -485,51 +516,119 @@ function Customize() {
   return (
     <div className="customizeContainer">
       <br />
-        <div className="optionCollection">
-          
-          <div className="optionContainer">
 
-            <label>Choose a Name For Your Blog</label>
-            <input
-              type="text"
-              placeholder={name}
-              value={name}
-              onChange={(e) => handleBlogNameChange(e)}/>
+      <div style={{ borderRadius: "10px", padding: "0.5em", backgroundColor: "#2E3132", color: "#dadadb", marginBottom: "1rem", width: "600px", margin: "0 auto 1em auto" }}>
+        <label htmlFor="fontSelector">Current Font: {selectedFont}</label>
 
-          </div>
-          
-          <div className="optionContainer">
-            
-            <label>Choose a Name For Your Blog</label>
-            <input
-              type="text"
-              placeholder={slogan}
-              value={slogan}
-              onChange={(e) => handleSloganChange(e)}/>
+        {/* Font Preview */}
+        <div
+          style={{
+            textAlign: "center",
+            height: "25px",
+            fontFamily: hoveredFont || selectedFont,
+            fontSize: "20px",
+            padding: "10px",
+            border: "1px solid #ccc",
+            borderRadius: "5px",
+            marginBottom: "0.5rem"
 
-          </div>
+          }}
+        >
+          The quick brown fox jumps over the lazy dog.
+        </div>
+
+        {/* Custom Font List */}
+        <div id="fontSelector" style={{ height: "200px", overflowY: "auto" }}>
+          {commonFonts.map((font) => (
+            <div
+              key={font}
+              onMouseEnter={() => setHoveredFont(font)}
+              onMouseLeave={() => setHoveredFont(null)}
+              onClick={() => {
+                setSelectedFont(font);
+                document.documentElement.style.setProperty("--font-family", font);
+              }}
+              style={{
+                minHeight: "25px",
+                width: "95%",
+                fontFamily: font,
+                padding: "8px",
+                marginBottom: "4px",
+                borderRadius: "4px",
+                backgroundColor:
+                  hoveredFont === font || selectedFont === font
+                    ? "#727475"
+                    : "transparent",
+                cursor: "pointer"
+              }}
+            >
+              {font}
+            </div>
+          ))}
+        </div>
+      </div>
+
+
+      <div className="optionCollection">
+
+        <div className="optionContainer">
+
+          <label>Choose a Name For Your Blog</label>
+          <input
+            type="text"
+            placeholder={name}
+            value={name}
+            onChange={(e) => handleBlogNameChange(e)} />
 
         </div>
-        <div className="buttonContainer">
-           <button onClick={downloadConfig}>Download Config</button>
-           <button onClick={saveConfigToServer}>Save the Changes</button>
+
+        <div className="optionContainer">
+
+          <label>Choose a Name For Your Blog</label>
+          <input
+            type="text"
+            placeholder={slogan}
+            value={slogan}
+            onChange={(e) => handleSloganChange(e)} />
+
         </div>
+
+      </div>
+      <div className="buttonContainer">
+        <button onClick={downloadConfig}>Download Config</button>
+        <button onClick={saveConfigToServer}>Save the Changes</button>
+
+      </div>
+      <div className="optionCollection">
+        <div>{saveStatus && <p
+          style={{
+            textAlign: "center",
+            height: "25px",
+            fontSize: "20px",
+            padding: "10px",
+            border: "1px solid #ccc",
+            borderRadius: "5px",
+            marginBottom: "0.5rem"
+
+          }} className="saveStatus">{saveStatus}</p>}</div>
+
+      </div>
 
       <h1>Customize Theme</h1>
       <div className="optionCollection">
         <div className="optionContainer">
           <label>Background Color</label>
-          <input type="color" value={bgMainColor} onChange={handleBgMainColor}/>
+          <input type="color" value={bgMainColor} onChange={handleBgMainColor} />
         </div>
         <div className="optionContainer">
           <label>Text color</label>
           <input type="color" value={textColor} onChange={handleTextColor} />
         </div>
-       
+
       </div>
-     
-     <div className="optionCollection">
-     <div className="optionContainer">
+
+      <div className="optionCollection">
+        <div className="optionContainer">
           <label>Blog Page Title Color</label>
           <input type="color" value={titlePrimaryColor} onChange={handleTitlePrimaryColor} />
         </div>
@@ -541,12 +640,12 @@ function Customize() {
           <label>Blog Header Background Color</label>
           <input type="color" value={blogHeaderBgColor} onChange={handleBlogHeaderBgColor} />
         </div>
-     </div>
+      </div>
 
-    <label className="customizeLabeler">Your Homepage</label>
-    <div className="homeContainer">
-      <Home articleModules={articleModules} />
-    </div>
+      <label className="customizeLabeler">Your Homepage</label>
+      <div className="homeContainer">
+        <Home articleModules={articleModules} />
+      </div>
       <div className="optionCollection">
 
         <div className="optionContainer">
@@ -576,9 +675,9 @@ function Customize() {
 
       <label className="customizeLabeler">Individual Pages</label>
       <div className="homeContainer">
-        <Deniz_İçin_makale></Deniz_İçin_makale> {/*TODO: DEFINE A DEFAULT ARTICLE FOR THIS*/} 
+        <Deniz_İçin_makale></Deniz_İçin_makale> {/*TODO: DEFINE A DEFAULT ARTICLE FOR THIS*/}
       </div>
-     
+
       <div className="optionCollection">
         <div className="optionContainer">
           <label>Article In Title Color</label>
@@ -596,108 +695,118 @@ function Customize() {
       <div className="buttonContainer">
         <button onClick={downloadCSS}>Download CSS</button>
         <button onClick={saveThemeToServer}>Save Theme to Server</button>
-        
+
       </div>
       <br />
-    <div>{saveStatus && <p className="saveStatus">{saveStatus}</p>}</div>
-    
-      
-    <label className="customizeLabeler">Footer Settings</label>
-    
-    <div className="optionCollection">
-      <div className="optionContainer">
-              
-              <label>Display your name in footer</label>
-              <input
-                type="text"
-                value={creatorName}
-                onChange={(e) => handleCreatorName(e)}/>
+      <div className="optionCollection">{saveStatus && <p style={{
+        textAlign: "center",
+        height: "25px",
+        fontSize: "20px",
+        padding: "10px",
+        border: "1px solid #ccc",
+        borderRadius: "5px",
+        marginBottom: "0.5rem"
+
+      }} className="saveStatus">{saveStatus}</p>}
       </div>
-      <div className="optionContainer">
-              
-              <label>Display your Contact email</label>
-              <input
-                type="text"
-                value={creatorContact}
-                onChange={(e) => handleCreatorContact(e)}/>
-      </div>    
+
+
+      <label className="customizeLabeler">Footer Settings</label>
+
+      <div className="optionCollection">
+        <div className="optionContainer">
+
+          <label>Display your name in footer</label>
+          <input
+            type="text"
+            value={creatorName}
+            onChange={(e) => handleCreatorName(e)} />
+        </div>
+        <div className="optionContainer">
+
+          <label>Display your Contact email</label>
+          <input
+            type="text"
+            value={creatorContact}
+            onChange={(e) => handleCreatorContact(e)} />
+        </div>
+
+      </div>
+
+      <div className="optionCollection">
+        <div className="optionContainer">
+
+          <label>Display your Instagram</label>
+          <input
+            type="text"
+            value={instaV}
+            onChange={(e) => handleCreatorInsta(e)} />
+        </div>
+        <div className="optionContainer">
+
+          <label>Display your Github</label>
+          <input
+            type="text"
+            value={githubV}
+            onChange={(e) => handleCreatorGithub(e)} />
+        </div>
+        <div className="optionContainer">
+
+          <label>Display your Twitter</label>
+          <input
+            type="text"
+            value={twitterV}
+            onChange={(e) => handleCreatorTwitter(e)} />
+        </div>
+      </div>
+
+      <div className="optionCollection">
+        <div className="optionContainer">
+
+          <label>Display your LinkedIn</label>
+          <input
+            type="text"
+            value={linkedinV}
+            onChange={(e) => handlecreatorLinkedin(e)} />
+        </div>
+        <div className="optionContainer">
+
+          <label>Display your Facebook</label>
+          <input
+            type="text"
+            value={facebookV}
+            onChange={(e) => handleCreatorFacebook(e)} />
+        </div>
+        <div className="optionContainer">
+
+          <label>Display your website</label>
+          <input
+            type="text"
+            value={pWebsiteV}
+            onChange={(e) => handleCreatorWebsite(e)} />
+        </div>
+      </div>
+      <div className="optionCollection">
+        <div className="optionContainer">
+
+          <label>Display your Youtube Channel</label>
+          <input
+            type="text"
+            value={youtubeV}
+            onChange={(e) => handleCreatorYoutube(e)} />
+        </div>
+      </div>
+
+      <div className="buttonContainer">
+        <button onClick={downloadFooter}>Download Footer</button>
+        <button onClick={saveFooterToServer}>Save the Footer</button>
+      </div>
+
+
+
 
     </div>
-    
-    <div className="optionCollection">
-      <div className="optionContainer">
-              
-              <label>Display your Instagram</label>
-              <input
-                type="text"
-                value={instaV}
-                onChange={(e) => handleCreatorInsta(e)}/>
-      </div> 
-      <div className="optionContainer">
-              
-              <label>Display your Github</label>
-              <input
-                type="text"
-                value={githubV}
-                onChange={(e) => handleCreatorGithub(e)}/>
-      </div> 
-      <div className="optionContainer">
-              
-              <label>Display your Twitter</label>
-              <input
-                type="text"
-                value={twitterV}
-                onChange={(e) => handleCreatorTwitter(e)}/>
-      </div> 
-    </div>
 
-    <div className="optionCollection">
-      <div className="optionContainer">
-              
-              <label>Display your LinkedIn</label>
-              <input
-                type="text"
-                value={linkedinV}
-                onChange={(e) => handlecreatorLinkedin(e)}/>
-      </div> 
-      <div className="optionContainer">
-              
-              <label>Display your Facebook</label>
-              <input
-                type="text"
-                value={facebookV}
-                onChange={(e) => handleCreatorFacebook(e)}/>
-      </div> 
-      <div className="optionContainer">
-              
-              <label>Display your website</label>
-              <input
-                type="text"
-                value={pWebsiteV}
-                onChange={(e) => handleCreatorWebsite(e)}/>
-      </div> 
-    </div>
-    <div className="optionCollection">
-      <div className="optionContainer">
-                
-              <label>Display your Youtube Channel</label>
-              <input
-                type="text"
-                value={youtubeV}
-                onChange={(e) => handleCreatorYoutube(e)}/>
-      </div> 
-    </div>
-
-    <div className="buttonContainer">
-      <button onClick={downloadFooter}>Download Footer</button>
-      <button onClick={saveFooterToServer}>Save the Footer</button>
-    </div>
-
-
-
-
-    </div>
-    
   );
 }
 
