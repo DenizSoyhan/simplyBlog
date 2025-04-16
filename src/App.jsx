@@ -17,7 +17,7 @@ function App() {
   return (
     <div className="app">
       <BlogHeader />
-      <Router basename="/simplyBlog">
+      <Router basename="https://denizsoyhan.github.io/simplyBlog/">
         <Routes>
           <Route path="/" element={<Home articleModules={articleModules} />} />
           {/* Dynamic article route */}
