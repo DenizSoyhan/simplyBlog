@@ -142,29 +142,40 @@ function ArticleGenerator() {
 
   // add YouTube video via iframe
   //I don't know how many forms a youtube URL can take so I am patching it as I need a feature.
-  //--First feature: time stamped videos so your users can jump onto that time directly
+  //--First feature: time stamped videos so your users can jump onto that time directly (this was only working with links like: https://www.youtube.com/watch?v=b50E-Wk0BgQ&t=260s)
+  //--Second feature: time stamp thing now works with shortened videos (https://youtu.be/b50E-Wk0BgQ?t=260)
   function addVideo() {
-    const url = prompt("Enter YouTube Video URL:");
-    if (url) {
-      try {
-        const parsed = new URL(url);
-        const videoId = parsed.searchParams.get("v");
-        let start = 0;
+    const urlInput = prompt("Enter YouTube Video URL:");
+    if (!urlInput) return;
   
-        // If there's a time param (t=4998s), extract it
-        if (parsed.searchParams.has("t")) {
-          const tParam = parsed.searchParams.get("t");
-          // Remove the 's' if it exists and parse to int
-          start = parseInt(tParam.replace('s', ''), 10);
-        }
+    try {
+      const parsed = new URL(urlInput);
+      let videoId = "";
+      let start = 0;
   
-        const embedUrl = `https://www.youtube.com/embed/${videoId}${start ? `?start=${start}` : ''}`;
-        setContent((prevContent) => prevContent + `\n[Video: ${embedUrl}]`);
-      } catch (err) {
-        alert("Invalid YouTube URL");
+      // Extract start time from ?t=14 or &t=14
+      if (parsed.searchParams.has("t")) {
+        const t = parsed.searchParams.get("t");
+        start = parseInt(t.replace("s", ""), 10) || 0;
       }
+  
+      if (parsed.hostname.includes("youtu.be")) {
+        // Shortened URL: https://youtu.be/VIDEOID?t=...
+        videoId = parsed.pathname.slice(1);
+      } else if (parsed.hostname.includes("youtube.com")) {
+        // Regular URL: https://www.youtube.com/watch?v=VIDEOID&t=...
+        videoId = parsed.searchParams.get("v");
+      }
+  
+      if (!videoId) throw new Error("Invalid video ID");
+  
+      const embedUrl = `https://www.youtube.com/embed/${videoId}${start ? `?start=${start}` : ""}`;
+      setContent((prevContent) => prevContent + `\n[Video: ${embedUrl}]`);
+    } catch (err) {
+      alert("Invalid YouTube URL");
     }
   }
+  
   
   
   function handleAddQuote() {
@@ -247,17 +258,14 @@ function ArticleGenerator() {
       const boldStart = paragraph.indexOf('**', currentPosition);
       const italicStart = paragraph.indexOf('##', currentPosition);
       const underlineStart = paragraph.indexOf('__', currentPosition);
-      
       // Find the first marker (if any)
       const markers = [
         { type: 'bold', pos: boldStart, marker: '**', className: 'bold' },
         { type: 'italic', pos: italicStart, marker: '##', className: 'italic' },
         { type: 'underline', pos: underlineStart, marker: '__', className: 'underlined' }
       ].filter(m => m.pos !== -1);
-      
       // sort markers by position
       markers.sort((a, b) => a.pos - b.pos);
-      
       // if no markers found, add remaining text and exit
       if (markers.length === 0) {
         result += paragraph.substring(currentPosition);

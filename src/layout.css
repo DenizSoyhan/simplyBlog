@@ -201,7 +201,7 @@
     width: 90%;
     text-align: center;
     margin: 0em auto 0em auto !important;
-    border-bottom: 1px solid var(--text-color);
+    border-bottom: 1px solid var(--article-in-content-color);
   }
 
 
@@ -393,10 +393,7 @@
   }
   
   /*CUSTOMIZERS*/
-  .homeContainer{
-    border-top: px solid var(--text-color);
-    
-  }
+
   .customizeContainer h1{
     text-align: center;
 
@@ -404,13 +401,23 @@
   }
   .customizeLabeler{
     display: inline-block;
-    color: var(--text-color);
+    color: black;
+    margin: 0em auto 0.25em auto;
+    padding: 0.1em;
+    padding-left: 1em;
 
-    width: 100%;
-    text-align: center;
+
+    background-color: white;
+
+
+    width: 60%;
+
 
     font-size: 2rem;
     font-weight: bold;
+
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
   }
   .optionCollection{
     display: flex;
@@ -468,6 +475,10 @@
 
     border-radius: 50%;
   }
+
+  .footerSettings{
+    margin-top: 1em;
+  }
   
 
   /*DYNAMIC COLORS FROM CUSTOMIZERS*/
@@ -475,7 +486,7 @@
     
   body {
     background-color: var(--main-bg-color);
-    color: var(--text-color);
+    color: var(--article-in-title-color);
   }
   
   .blogHeaderContainer {
@@ -511,7 +522,7 @@
   
   .tooltip-text {
     background-color: var(--articleShowCaseContainer-bg-color);
-    color: var(--text-color);
+    color: var(--article-title-color);
   }
   .dynamicToolTipText{
     color: var(--article-title-color);

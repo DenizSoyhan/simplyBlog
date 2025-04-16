@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Home from "./pages/Home";
-import Deniz_İçin_makale from "../defaultAssets/defaultArticles/22-Deniz_İçin_makale";
+import Article_Generator_Supported_Features from "./pages/articles/95-Article_Generator_Supported_Features.jsx";
 import BlogHeader from "./BlogHeader";
 import BlogConfig from "./BlogConfig";
 import BlogFooterConfig from "./FooterConfig";
@@ -25,7 +25,7 @@ function Customize() {
     "Impact",
 
   ];
-
+  //GaramondPremierPro
 
   /* Setting default values for hooks*/
 
@@ -104,9 +104,7 @@ function Customize() {
 
     const rootStyles = getComputedStyle(document.documentElement);
 
-    setBgMainColor(convertToHex(rootStyles.getPropertyValue("--main-bg-color").trim() || "#ffffff"));
-    setTextColor(convertToHex(rootStyles.getPropertyValue("--text-color").trim() || "#000000"));
-    setTitlePrimaryColor(convertToHex(rootStyles.getPropertyValue("--title-primary-color").trim() || "#000000"));
+    setBgMainColor(convertToHex(rootStyles.getPropertyValue("--main-bg-color").trim() || "#ffffff"));    setTitlePrimaryColor(convertToHex(rootStyles.getPropertyValue("--title-primary-color").trim() || "#000000"));
     setTitleSecondaryColor(convertToHex(rootStyles.getPropertyValue("--title-secondary-color").trim() || "#000000"));
     setBlogHeaderBgColor(convertToHex(rootStyles.getPropertyValue("--blog-header-bg").trim() || "#ffffff"));
     setArticleTitleColor(convertToHex(rootStyles.getPropertyValue("--article-title-color").trim() || "#000000"));
@@ -167,12 +165,6 @@ function Customize() {
     const newColor = e.target.value;
     setBgMainColor(newColor);
     document.documentElement.style.setProperty("--main-bg-color", newColor);
-  }
-
-  function handleTextColor(e) {
-    const newColor = e.target.value;
-    setTextColor(newColor);
-    document.documentElement.style.setProperty("--text-color", newColor);
   }
 
   function handleTitlePrimaryColor(e) {
@@ -400,7 +392,6 @@ function Customize() {
     return `:root {
     --font-family: ${selectedFont};
     --main-bg-color: ${bgMainColor};
-    --text-color: ${textColor};
     --title-primary-color: ${titlePrimaryColor};
     --title-secondary-color: ${titleSecondaryColor};
     --desc-color: ${articleSCDesc};
@@ -517,6 +508,43 @@ function Customize() {
     <div className="customizeContainer">
       <br />
 
+      
+
+      <label className="customizeLabeler">Name and slogan of your blog</label>
+      <div className="optionCollection">
+
+        <div className="optionContainer">
+
+          <label>Choose a Name For Your Blog</label>
+          <input
+            type="text"
+            placeholder={name}
+            value={name}
+            onChange={(e) => handleBlogNameChange(e)} />
+
+        </div>
+
+        <div className="optionContainer">
+
+          <label>Choose a Name For Your Blog</label>
+          <input
+            type="text"
+            placeholder={slogan}
+            value={slogan}
+            onChange={(e) => handleSloganChange(e)} />
+
+        </div>
+
+      </div>
+      <div className="buttonContainer">
+        <button onClick={downloadConfig}>Download Config</button>
+        <button onClick={saveConfigToServer}>Apply the Name Changes</button>
+
+      </div>
+      <br></br>
+
+      <h1>Customize Theme</h1>
+      <div style={{width:"100%",border:"1px solid white", marginBottom:"1em"}}></div>
       <div style={{ borderRadius: "10px", padding: "0.5em", backgroundColor: "#2E3132", color: "#dadadb", marginBottom: "1rem", width: "600px", margin: "0 auto 1em auto" }}>
         <label htmlFor="fontSelector">Current Font: {selectedFont}</label>
 
@@ -567,38 +595,6 @@ function Customize() {
           ))}
         </div>
       </div>
-
-
-      <div className="optionCollection">
-
-        <div className="optionContainer">
-
-          <label>Choose a Name For Your Blog</label>
-          <input
-            type="text"
-            placeholder={name}
-            value={name}
-            onChange={(e) => handleBlogNameChange(e)} />
-
-        </div>
-
-        <div className="optionContainer">
-
-          <label>Choose a Name For Your Blog</label>
-          <input
-            type="text"
-            placeholder={slogan}
-            value={slogan}
-            onChange={(e) => handleSloganChange(e)} />
-
-        </div>
-
-      </div>
-      <div className="buttonContainer">
-        <button onClick={downloadConfig}>Download Config</button>
-        <button onClick={saveConfigToServer}>Save the Changes</button>
-
-      </div>
       <div className="optionCollection">
         <div>{saveStatus && <p
           style={{
@@ -614,15 +610,14 @@ function Customize() {
 
       </div>
 
-      <h1>Customize Theme</h1>
       <div className="optionCollection">
         <div className="optionContainer">
           <label>Background Color</label>
           <input type="color" value={bgMainColor} onChange={handleBgMainColor} />
         </div>
         <div className="optionContainer">
-          <label>Text color</label>
-          <input type="color" value={textColor} onChange={handleTextColor} />
+          <label>Blog Header Background Color</label>
+          <input type="color" value={blogHeaderBgColor} onChange={handleBlogHeaderBgColor} />
         </div>
 
       </div>
@@ -636,10 +631,7 @@ function Customize() {
           <label>Blog page Second Title Color</label>
           <input type="color" value={titleSecondaryColor} onChange={handleTitleSecondaryColor} />
         </div>
-        <div className="optionContainer">
-          <label>Blog Header Background Color</label>
-          <input type="color" value={blogHeaderBgColor} onChange={handleBlogHeaderBgColor} />
-        </div>
+
       </div>
 
       <label className="customizeLabeler">Your Homepage</label>
@@ -675,7 +667,7 @@ function Customize() {
 
       <label className="customizeLabeler">Individual Pages</label>
       <div className="homeContainer">
-        <Deniz_İçin_makale></Deniz_İçin_makale> {/*TODO: DEFINE A DEFAULT ARTICLE FOR THIS*/}
+        <Article_Generator_Supported_Features></Article_Generator_Supported_Features>
       </div>
 
       <div className="optionCollection">
@@ -712,7 +704,8 @@ function Customize() {
 
 
       <label className="customizeLabeler">Footer Settings</label>
-
+      
+      <div className="footerSettings">
       <div className="optionCollection">
         <div className="optionContainer">
 
@@ -732,6 +725,7 @@ function Customize() {
         </div>
 
       </div>
+
 
       <div className="optionCollection">
         <div className="optionContainer">
@@ -759,6 +753,8 @@ function Customize() {
             onChange={(e) => handleCreatorTwitter(e)} />
         </div>
       </div>
+
+
 
       <div className="optionCollection">
         <div className="optionContainer">
@@ -796,6 +792,12 @@ function Customize() {
             onChange={(e) => handleCreatorYoutube(e)} />
         </div>
       </div>
+
+
+      </div>
+
+
+
 
       <div className="buttonContainer">
         <button onClick={downloadFooter}>Download Footer</button>
