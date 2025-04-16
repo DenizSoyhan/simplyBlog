@@ -16,13 +16,13 @@ const isDevelopment = import.meta.env.DEV; // Vite provides this variable
 function App() {
   return (
     <div className="app">
-      <BlogHeader></BlogHeader>
-      <Router>
+      <BlogHeader />
+      <Router basename="/simplyBlog">
         <Routes>
           <Route path="/" element={<Home articleModules={articleModules} />} />
           {/* Dynamic article route */}
           <Route path="/article/:articleName" element={<ArticlePage articles={articleModules} />} />
-          
+
           {/* Only show these routes in development mode */}
           {isDevelopment && (
             <>
@@ -32,7 +32,7 @@ function App() {
           )}
         </Routes>
       </Router>
-      <BlogFooter></BlogFooter>
+      <BlogFooter />
     </div>
   );
 }
