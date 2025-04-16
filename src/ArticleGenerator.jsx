@@ -16,6 +16,8 @@ function ArticleGenerator() {
   const [quoteTextInput, setQuoteTextInput] = useState("");
   const [quoteOwner, setQuoteOwner] = useState("");
 
+  const basePath =import.meta.env.BASE_URL;
+
   useEffect(() => {
     checkServerStatus();
   }, []);
@@ -346,7 +348,7 @@ function ArticleGenerator() {
         .map((item) => {
           if (item.startsWith("[Image:")) {
             const imagePath = item.slice(7, -1);
-            return `<div className="imageContainer"><img src="${imagePath}" alt="Article Image" className="articleImage" /></div>`;
+            return `<div className="imageContainer"><img src="${basePath}${imagePath.slice(2)}" alt="Article Image" className="articleImage" /></div>`;
           }
           if (item.startsWith("[Video:")) {
             const videoUrl = item.slice(8, -1);
@@ -601,7 +603,7 @@ function ArticleGenerator() {
           .map((item, index) => {
             if (item.startsWith("[Image:")) {
               const imagePath = item.slice(7, -1);
-              return <div key={index} className="imageContainer"><img src={imagePath} alt="Article Image" className="articleImage" /></div>;
+              return <div key={index} className="imageContainer"><img src={basePath+imagePath.slice(1)} alt="Article Image" className="articleImage" /></div>;
             }
             if (item.startsWith("[Video:")) {
               const videoUrl = item.slice(8, -1);

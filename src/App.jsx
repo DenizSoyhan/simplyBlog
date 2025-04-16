@@ -13,11 +13,16 @@ const articleModules = import.meta.glob("./pages/articles/*.jsx", { eager: true 
 // Check if we're in development mode
 const isDevelopment = import.meta.env.DEV; // Vite provides this variable
 
+const basePath = import.meta.env.BASE_URL.slice(0,-1); // /simplyBlog/
+
+console.log(basePath);
+
+
 function App() {
   return (
     <div className="app">
       <BlogHeader />
-      <Router basename="https://denizsoyhan.github.io/simplyBlog/">
+      <Router basename="/simplyBlog">
         <Routes>
           <Route path="/" element={<Home articleModules={articleModules} />} />
           {/* Dynamic article route */}
