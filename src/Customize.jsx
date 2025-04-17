@@ -5,6 +5,7 @@ import BlogHeader from "./BlogHeader";
 import BlogConfig from "./BlogConfig";
 import BlogFooterConfig from "./FooterConfig";
 
+
 const articleModules = import.meta.glob("../defaultAssets/defaultArticles/*.jsx", { eager: true });
 
 function Customize() {
@@ -95,7 +96,6 @@ function Customize() {
       const rgbMatch = computedColor.match(/\d+/g);
       if (rgbMatch && rgbMatch.length >= 3) {
         const [r, g, b] = rgbMatch;
-        console.log(rgbMatch)
         return `#${Number(r).toString(16).padStart(2, '0')}${Number(g).toString(16).padStart(2, '0')}${Number(b).toString(16).padStart(2, '0')}`;
       }
 

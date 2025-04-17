@@ -15,14 +15,14 @@ const isDevelopment = import.meta.env.DEV; // Vite provides this variable
 
 const basePath = import.meta.env.BASE_URL.slice(0,-1); // /simplyBlog/
 
-console.log(basePath);
+
 
 
 function App() {
   return (
     <div className="app">
       <BlogHeader />
-      <Router basename="/simplyBlog">
+      <Router basename={basePath}>
         <Routes>
           <Route path="/" element={<Home articleModules={articleModules} />} />
           {/* Dynamic article route */}

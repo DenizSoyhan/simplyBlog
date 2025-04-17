@@ -284,6 +284,7 @@
   }
   .quoteText{
     font-weight: 300;
+    width: 80%;
   }
   .quoteOwner{
     margin-top: 0.5em;
@@ -374,7 +375,7 @@
   }
   
   .iframeContainer iframe {
-    width: 80%;
+    width: 90%;
     height: 100%;
     border: none;
     border-radius: 15px;
@@ -796,6 +797,9 @@
 
     height: 250px ;
   }
+  .iframeContainer iframe{
+    width: 90%;
+  }
 
 }
 
@@ -809,6 +813,8 @@
   }
 
   .iframeContainer {
+    margin: 0em auto;
+    
     display: flex;
     justify-content: center;
     align-items: center;
@@ -816,6 +822,10 @@
     margin: 1em 0;
 
     height: 200px ;
+
+  }
+  .iframeContainer iframe{
+    width: 90%;
   }
 
 
