@@ -92,7 +92,64 @@ If it is not recognized:
 >> Download Node from it's [official site](https://nodejs.org/en) and follow the instructions. After that try the first step if you can now see the versions.
 
 ### 1)Have The Files
+This is a *Template Repository*. Meaning you can just have your own version with this button on right top side. Chooose "Create a New Repository". 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/9e1ca353-6631-436b-acb3-486d6281328d" width="800" />
+</p>
+Decide on a name for your repo! And create it.
+After your version is created. Go to code and copy the SSH option for cloning. I highly recommend using this to clone and push later on after adding articles and changing themes. So if you never set your SSH keys please do. You can follow this tutorial to create your own SSH keys: [SSH Key Configuration](https://github.com/DenizSoyhan/SSH-key-creation-on-Windows) This is a requirement. You can't skip it.
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/b44ccafa-a97e-49b6-823a-d948b84ad4fb" width="400" />
+</p>
+
+Open cmd on Desktop and type git clone with your copied SSH string that you got from image above:
+
+```bash
+ git clone [git@github.com:YourUserName/YourRepoName.git]
+
+```
+### 2)Configure and Deploy
+Let's see if you can put it on the internet first! Then you can try to change themes and adding your own articles.<br>
+After cloning the repo, navigate to the folder. There is a file called "**vite.config.js**". You need to change **/simplyBlog/** with your own repo name (put it between"/ /"). So if your repo name is "Cooking-with-Deniz" the line should read "**/Cooking-with-Deniz/**". This is quite important<br>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/820ada95-17cf-4cb8-91da-99690fe3204b" width="800" />
+</p>
+
+Navigate to the folder and type "**cmd**" in the navigation bar. Type these in the terminal in order:
+> This will download all dependencies
+```bash
+ npm install
+
+```
+This will add your **vite.config.js** to staging area of git.
+```bash
+ git add .
+
+```
+This will commit your staging area.
+```bash
+ git commit -m "This will be my first deployment"
+
+```
+This will update your remote repo on github. If you didn't change it specifically the branch name should be master.
+```bash
+ git push origin master
+
+```
+
+And the final one. This will create a seperate branch on github with gh-pages using your master branch which will be what other people see. 
+```bash
+ npm run deploy
+
+```
+If you see the below result with the message "**Published**"", congrats! In 1-3 minutes you should be able to see the default template for simplyBlog. To see your URL go to "**Settings**" on your github repo and click on "**Pages**". When it is done on top there should be a URL like: https://[yourUserName].github.io/[yourRepoName]/
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c2f833a7-a4aa-44b2-8fd2-d1a1db0634d2" width="800" />
+</p>
 
 
+
+This two-step process with pushing and deploying keeps your source code (on master branch) and your deployed build (on gh-pages branch) separate, which is the standard practice for GitHub Pages deployments.
 
 # HOW TO USE
