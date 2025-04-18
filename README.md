@@ -6,8 +6,20 @@ This is a blog maker template repository that I made. You can see the template a
 
 ## Contents of ReadMe:<br>
 - [Features](#features)<br>
+  - [Home Page](#home-page)
+  - [Customizer](#customizer)
+  - [Article Generator](#article-generator)<br>
 - [How To Install](#how-to-install)<br>
+  - [0)Requirements](#0requirements)
+  - [1)Have The Files](#1have-the-files)
+  - [2)Configure and Deploy](#2configure-and-deploy)<br>
 - [How To Use](#how-to-use)<br>
+  - [0) RUN THE SERVER](#0-run-the-server)
+  - [1) CUSTOMIZER](#1-customizer)
+  - [2) ARTICLE-GENERATOR](#2-article-generator)
+  - [3) ARTICLE MANAGEMENT](#3-article-management)
+  - [4) REDEPLOYMENT](#4-redeployment)<br>
+- [Future Features](#future-features)<br>
 
 # FEATURES
 - ## Home Page
@@ -20,16 +32,7 @@ Default Home page looks like the image below. No worries you can make your own t
 Your blog will have your desired blog header with your desired name, alt title such as "Never Been Simpler" or you can remove the alt title completely and it's own color scheme.
 
 #### -Articles
-The articles are sorted in a very intuitive way. The **./simplyBlog/src/pages/articles** directory consists of your articles. In this directory the articles named in this manner:
-  - **P-Pinned_Article.jsx**<br>
-  - **12-Article_Name.jsx**
-  - **13-Second_Article.jsx**
-  - **U-Invisible_Article.jsx**<br><br>
-- *Number* prefixes decides which article will be shown closer to the top. Bigger the number higher the priority. In this case _13-Second_Article.jsx_ will be on top of __12-Article_Name.jsx__.
-- The **P-Pinned_Article.jsx** will be pinned to the top of the page and has a higher priority than **13-Second_Article.jsx** and  **12-Article_Name.jsx**. If you want your readers to see an article first use this prefix!
-- **U-Invisible_Article.jsx** will not be shown on the Home Page and only people with the direct link to the article will be able to see them.
-#### -Footer<br>
-You can put your name, contact e-mail adress, and all your socials (Instagram, GitHub, Twitter, LinkedIn, Facebook, Youtube, Personal Website) if you want to. 
+The articles are sorted in a very intuitive way. This is explained in depth [here](##3-article-management).
 
 - ## Article Content
 You can implement **bold**, *italic*, <ins>underlined</ins> stylings, a special component called quote that you can see below, images and Youtube videos with time stamps.
@@ -198,17 +201,99 @@ There are several text boxes here. If you leave a box empty that social will not
 
 
 
-## 2)ARTICLE-GENERATOR
+## 2) ARTICLE-GENERATOR
 You can decide on an article title and all the images you add after this will be created with this name so try to decide on a name and not change it if possible later on.
 After that you can add article content in the bigger box and by pressing **SAVE** button you can preview how your articles will look below the page. 
 >> ### Text styling:
 You can add **bold**, *italic*, <ins>underlined</ins> stylings to your text by following the guide which is included on generator page.
 >>Text Formatting Guide:
-** Bold Text ** --> Use ** around text for bold with no spaces<br>
-##Italic Text## --> Use ## around text for italic with no spaces<br>
-__ Underlined Text __ --> Use __ around text for underline with no spaces<br>
+>* ** Bold Text ** --> Use ** around text for bold with no spaces<br>
+>* ##Italic Text## --> Use ## around text for italic with no spaces<br>
+>* __ Underlined Text __ --> Use __ around text for underline with no spaces<br>
 
 >> ### Images:
-  You can use the button "**Add Image**" to chose an image from your file system to add an image to your article. A copy of the image will be created in a directory that is located 
+>> You can use the button "**Add Image**" to chose an image from your file system to add an image to your article. A copy of the image and the directory itself will be created that is located in **/simplyBlog/public/articleImages/[nameOfYourArticle]**
 
-## 3)CUSTOMIZER
+>> ### Youtube Videos:
+>> You can use the button "**Add Youtube Video**" to paste a youtube video to add an iframe to your article. This option also accepts time-stamped videos so the reader can start the video from the exact point that you want them to.
+
+>> ### Quotes:
+>> You can use the button "**Add Quote**" to well, add a quote from someone. This is a specialized component that is stylized just for this use. If you leave the owner section empty it will still show the quote. The quote itself can't be left empty tho. The quotes looks like the image below.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/52abb31f-43d1-4735-a024-5e41b0aa203c" width="700" />
+</p>
+
+>> ### Pinned and Unlisted:
+>> There are 2 checkboxes that you can check.
+>> #### Pinned
+>> This option will put your article in a pinned state. It will be shown at the top of your Home Page with a thumb-tack icon.
+>> #### Unlisted
+>> This option will put your article in an unlisted state. It will not be shown in the Home Page and only people with a direct link will be able to see it.
+
+> With the "**SAVE**" button you can preview how your article will look like.
+
+> With the "**Save To Articles Directory**" button you will add everything in your **Preview** so if you write something and not press **SAVE** button before hand it will not be in the final product. Don't forget 'If you don't see it in the preview box it doesn't exist yet'!
+
+
+
+## 3) ARTICLE MANAGEMENT
+All your articles will be located in "**/simplyBlog/src/pages/articles**" (ofc 'simplyBlog' is your own directory name).  <br>
+The articles are sorted in a very intuitive way. In this directory the articles named in this manner:
+> - **P-Pinned_Article.jsx**<br>
+> - **12-Article_Name.jsx**
+> - **13-Second_Article.jsx**
+> - **U-Invisible_Article.jsx**<br><br>
+> *Number* prefixes decides which article will be shown closer to the top. Bigger the number higher the priority. In this case _13-Second_Article.jsx_ will be on top of __12-Article_Name.jsx__.<br>
+> The **P-Pinned_Article.jsx** will be pinned to the top of the page and has a higher priority than **13-Second_Article.jsx** and  **12-Article_Name.jsx**. If you want your readers to see an article first use this prefix!<br>
+> **U-Invisible_Article.jsx** will not be shown on the Home Page and only people with the direct link to the article will be able to see them.
+
+So change these prefixes at your heart's content. Delete an article to remove it from your home page. Start by removing the showcase articles that came with the repo. The articles also have img folders dedicated to them. You can also remove them from "**/simplyBlog/public/articleImages/**".<br>
+
+I decided on this way of organizing because it is like organizing a homework folder.
+
+## 4) REDEPLOYMENT
+Every time you add a new article, change blog header, change the theme or change the footer you will update your **master** by commiting and pushing the changes and then redoploy the page.<br>
+This two-step process with pushing and deploying keeps your source code (on master branch) and your deployed build (on gh-pages branch) separate, which is the standard practice for GitHub Pages deployments.
+
+First add your changes to the staging area.
+```bash
+ git add .
+
+```
+You can check the changes you made via the command below. It will precisely show what is being changed. 
+```bash
+ git status
+
+```
+
+This will commit your staging area. The stuff after **-m** is your commit **message**. You have to write a message and it is good practice to describe what you did in a short manner like "I added a new article" or "changed the theme"
+```bash
+ git commit -m "This will be my first re-deployment"
+
+```
+This will update your remote repo on github. If you didn't change it specifically the branch name should be master.
+```bash
+ git push origin master
+
+```
+
+And the final one. This will create a seperate branch on github with gh-pages using your master branch which will be what other people see. 
+```bash
+ npm run deploy
+```
+If you see the below result with the message "**Published**"", congrats! In 1-3 minutes you should be able to see the default template for simplyBlog. To see your URL go to "**Settings**" on your github repo and click on "**Pages**". When it is done on top there should be a URL like: https://[yourUserName].github.io/[yourRepoName]/
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c2f833a7-a4aa-44b2-8fd2-d1a1db0634d2" width="800" />
+</p>
+
+## Future Features
+
+These are the features that I want to add in the future :P
+
+>- Preset themes so you don't have to configure stuff from scratch.
+>- PDF hosting
+>- More text stylings
+>- More font variety
+>- A way to save your progress while writing an article so if you want to continue later it is an option
