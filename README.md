@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://github.com/user-attachments/assets/c08ce960-d2a3-4465-9e1d-63166379b66e" width="700" />
+<img src="https://github.com/user-attachments/assets/c08ce960-d2a3-4465-9e1d-63166379b66e" width="800" />
 </p><br>
 
 This is a blog maker template repository that I made. You can see the template and some article examples [here](https://denizsoyhan.github.io/simplyBlog/).<br><br>  If you need a space to share your ideas without the hassle of watermarks and paywalls. You can customize it to your heart's content and add articles with an intuitive article generator! This project is the result of "Oh I can just my own version real quick!" delusion that all of us fall into. I hope it helps you!
@@ -40,8 +40,8 @@ You can implement **bold**, *italic*, <ins>underlined</ins> stylings, a special 
 - ## Customizer
 You will have access to a customizer on dev mode where you can decide on a theme, what font to use, name and alt title of your blog, all the footer content that we talked about in the Home Page section.
 <p align="center">
-<img src="https://github.com/user-attachments/assets/bbb275da-938f-4e34-b25f-482cba03a609" width="500" />
-  <img src="https://github.com/user-attachments/assets/9c9934be-122d-4bdd-ba17-f690beca9fdb" width="500" />
+<img src="https://github.com/user-attachments/assets/bbb275da-938f-4e34-b25f-482cba03a609" width="800" />
+  <img src="https://github.com/user-attachments/assets/9c9934be-122d-4bdd-ba17-f690beca9fdb" width="800" />
 </p>
 
 These are some random themes I put together in 2 minutes. I don't have the *designer eye* so hopefully you can come up with stuff better than me :P
@@ -97,7 +97,11 @@ This is a *Template Repository*. Meaning you can just have your own version with
   <img src="https://github.com/user-attachments/assets/9e1ca353-6631-436b-acb3-486d6281328d" width="800" />
 </p>
 Decide on a name for your repo! And create it.
-After your version is created. Go to code and copy the SSH option for cloning. I highly recommend using this to clone and push later on after adding articles and changing themes. So if you never set your SSH keys please do. You can follow this tutorial to create your own SSH keys: [SSH Key Configuration](https://github.com/DenizSoyhan/SSH-key-creation-on-Windows) This is a requirement. You can't skip it.
+After your version is created. Go to code and copy the SSH option for cloning. I highly recommend using this to clone and push later on after adding articles and changing themes. So if you never set your SSH keys please do. You can follow this tutorial to create your own SSH keys: 
+
+[SSH Key Configuration](https://github.com/DenizSoyhan/SSH-key-creation-on-Windows) This is a requirement. You can't skip it.
+
+
 <p align="center">
   <img src="https://github.com/user-attachments/assets/b44ccafa-a97e-49b6-823a-d948b84ad4fb" width="400" />
 </p>
@@ -153,3 +157,58 @@ If you see the below result with the message "**Published**"", congrats! In 1-3 
 This two-step process with pushing and deploying keeps your source code (on master branch) and your deployed build (on gh-pages branch) separate, which is the standard practice for GitHub Pages deployments.
 
 # HOW TO USE
+> ## 0) RUN THE SERVER
+You can activate the server to use all the functionalites below. Type this in the command line that runs on the blog directory to start:
+```bash
+ npm run start
+
+```
+If you see what's below you can go to the local host adress + [yourRepoName] you will see the home page.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/15f36fe3-f59d-4767-a6f7-a85d48f0929c" width="800" />
+</p>
+
+> ## 1) CUSTOMIZER
+Go to the customizer via http://localhost:5173/[yourRepoName]/customize
+Customizer has 3 sections that you can use to change aspects of your blog:
+> - Name and Slogan
+> - Theme and font
+> - Footer
+>> ### Name and Slogan
+Pretty self explanatory. You can change the name and slogan. Or leave it empty to remove these elements. When you are done click "**Apply the Name Changes**" button and the server will take care of it.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/dc096cf8-fc61-4f95-a2b0-c7e7874100e6" width="800" />
+</p>
+
+>> ### Theme and Font
+Choose the font you want and all the colors. You can preview how the article content and the home page article listings will look. When you are done click "**Save Theme to Server**" button and the server will take care of it.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/9eb24f4c-83c7-4aef-a9db-fac4df390d68" width="500" />
+</p>
+
+>> ### Footer
+There are several text boxes here. If you leave a box empty that social will not be included.  Type the links to socials you want to put in your footer and delete the ones you don't want. You can preview how it looks right below. One important thing you want is to include "**https://**" with your links. For example: **https://github.com/DenizSoyhan** will work but "**github.com/DenizSoyhan**" will not.When you are done click "**Save the Footer**" button and the server will take care of it.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/9212c91b-c52a-4d8e-8d4a-008041e46015" width="700" />
+</p>
+
+
+
+## 2)ARTICLE-GENERATOR
+You can decide on an article title and all the images you add after this will be created with this name so try to decide on a name and not change it if possible later on.
+After that you can add article content in the bigger box and by pressing **SAVE** button you can preview how your articles will look below the page. 
+>> ### Text styling:
+You can add **bold**, *italic*, <ins>underlined</ins> stylings to your text by following the guide which is included on generator page.
+>>Text Formatting Guide:
+** Bold Text ** --> Use ** around text for bold with no spaces<br>
+##Italic Text## --> Use ## around text for italic with no spaces<br>
+__ Underlined Text __ --> Use __ around text for underline with no spaces<br>
+
+>> ### Images:
+  You can use the button "**Add Image**" to chose an image from your file system to add an image to your article. A copy of the image will be created in a directory that is located 
+
+## 3)CUSTOMIZER
