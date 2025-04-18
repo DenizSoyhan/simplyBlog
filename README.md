@@ -297,3 +297,8 @@ These are the features that I want to add in the future :P
 >- More text stylings
 >- More font variety
 >- A way to save your progress while writing an article so if you want to continue later it is an option
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
