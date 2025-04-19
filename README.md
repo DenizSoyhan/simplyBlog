@@ -202,6 +202,7 @@ There are several text boxes here. If you leave a box empty that social will not
 
 
 ## 2) ARTICLE-GENERATOR
+Go to the article generator via http://localhost:5173/[yourRepoName]/generate-article <br>
 You can decide on an article title and all the images you add after this will be created with this name so try to decide on a name and not change it if possible later on.
 After that you can add article content in the bigger box and by pressing **SAVE** button you can preview how your articles will look below the page. 
 >> ### Text styling:
@@ -253,7 +254,7 @@ So change these prefixes at your heart's content. Delete an article to remove it
 I decided on this way of organizing because it is like organizing a homework folder.
 
 ## 4) REDEPLOYMENT
-Every time you add a new article, change blog header, change the theme or change the footer you will update your **master** by commiting and pushing the changes and then redoploy the page.<br>
+Repeat this step with every change. Every time you add or delete an article, change blog header, change the theme or change the footer you will update your **master** by commiting and pushing the changes and then redoploy the page.<br>
 This two-step process with pushing and deploying keeps your source code (on master branch) and your deployed build (on gh-pages branch) separate, which is the standard practice for GitHub Pages deployments.
 
 First add your changes to the staging area.
