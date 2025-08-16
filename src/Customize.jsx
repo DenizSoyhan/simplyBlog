@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Home from "./pages/Home";
-import Article_Generator_Supported_Features from "./pages/articles/95-Article_Generator_Supported_Features.jsx";
+import Article_Generator_Supported_Features from "../defaultAssets/defaultArticles/95-Article_Generator_Supported_Features.jsx";
 import BlogHeader from "./BlogHeader";
 import BlogConfig from "./BlogConfig";
 import BlogFooterConfig from "./FooterConfig";
