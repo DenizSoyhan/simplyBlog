@@ -15,15 +15,23 @@
   .blogHeaderContainer {
     padding: 0.5em 2em;
     line-height: 1.05;
+    width: fit-content;
   }
+
+  .blogHeaderContainer a{
+    text-decoration: none;
+  }
+
   
   #blogName {
     font-size: 3rem;
+
   }
   
   #slogan {
     font-size: 1.5rem;
     margin-left: 0.5em;
+
   }
   
   /* Article Showcase */

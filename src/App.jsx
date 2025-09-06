@@ -21,9 +21,11 @@ const basePath = import.meta.env.BASE_URL.slice(0,-1); // /simplyBlog/
 function App() {
   return (
     <div className="app">
-      <BlogHeader />
+
       <Router basename={basePath}>
+        <BlogHeader></BlogHeader>
         <Routes>
+
           <Route path="/" element={<Home articleModules={articleModules} />} />
           {/* Dynamic article route */}
           <Route path="/article/:articleName" element={<ArticlePage articles={articleModules} />} />

@@ -23,7 +23,7 @@ export const metadata = {
             </div>
 <p className="articleText" dangerouslySetInnerHTML={{ __html: 'You can add this little special component called \"Quotes\" via article generator. These features are added as I figure out that I need them to convey my ideas. So this might be super niche feature that looks unimportant but just know that it is here because it came to my mind first.' }} />
 <p className="articleText" dangerouslySetInnerHTML={{ __html: 'Here, we also have images. You can have an image of <span class=\"italic\"><span class=\"underlined\">Ana de Armas</span> </span> acting as <span class=\"bold\">Marilyn Monroe</span> in the 2022 movie <span class=\"bold\"><span class=\"italic\"><span class=\"underlined\">\"Blonde\"</span></span></span>.' }} />
-<div className="imageContainer"><img src=" /simplyBlog/articleImages/Article Generator Supported Features/blonde-marilyn-monroe--2032036311.jpg" alt="Article Image" className="articleImage" /></div>
+<div className="imageContainer"><img src={`${import.meta.env.BASE_URL}articleImages/Article Generator Supported Features/blonde-marilyn-monroe--2032036311.jpg`} alt="Article Image" className="articleImage" /></div>
 <p className="articleText" dangerouslySetInnerHTML={{ __html: 'Keen eyed readers might have picked up that some words are <span class=\"italic\">italic</span>, <span class=\"bold\">bold</span> or <span class=\"underlined\">underlined</span>. The article generator also supports these 3 stylings and combination of them!' }} />
       </div>
     );
